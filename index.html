@@ -2199,21 +2199,33 @@ function dexTile(c, idx) {
     <div class="dex-meta">#${c.numDisplay || c.number} · ${c.set}</div>
   </div>`;
 }
+const CANON = {
+  "20th":"Evolutions","BW4":"Dark Explorers","Dark Rush":"Dark Explorers","BW6c":"Boundaries Crossed",
+  "EX Delta Species":"Delta Species","EX Dragon Frontiers":"Dragon Frontiers","EX FireRed LeafGreen":"FireRed & LeafGreen",
+  "EX Holon Phantoms":"Holon Phantoms","EX TR Returns":"Team Rocket Returns","EX Unseen Forces":"Unseen Forces",
+  "HeartGold Collection":"HeartGold & SoulSilver","HeartGold SoulSilver":"HeartGold & SoulSilver",
+  "Moonlit Pursuit":"Secret Wonders","Rocket Gang":"Team Rocket","S10b":"Pokémon GO","S10P":"Astral Radiance",
+  "S4":"Vivid Voltage","SM10":"Unbroken Bonds","SM9b":"Unbroken Bonds","SM11":"Unified Minds","SM1S":"Sun & Moon",
+  "SM2K":"Guardians Rising","SM3H":"Burning Shadows","SM8":"Lost Thunder","SM8b":"Lost Thunder","SM9":"Team Up",
+  "Snow Hazard":"Paldea Evolved","SV2P":"Paldea Evolved","SV1V":"Scarlet & Violet","SV2a":"Pokémon 151",
+  "SV4a":"Paldean Fates","SV7":"Stellar Crown","XY11r":"Steam Siege","XY7":"Ancient Origins","XY9":"BREAKpoint"
+};
+const canonSet = s => CANON[s] || s;
 function renderDex() {
   const q = parseQuery(searchEl.value);
   const filtered = CARDS.filter(c => inLang(c) && (!q.name || c.name.toLowerCase().includes(q.name)) && (q.number == null || String(c.number).includes(String(q.number))));
   // For each name+set, note the distinct EN numbers and JP numbers.
   const setInfo = {};
   filtered.forEach(c => {
-    const ns = c.name + "|" + c.set;
+    const ns = c.name + "|" + canonSet(c.set);
     if (!setInfo[ns]) setInfo[ns] = { en: new Set(), jp: new Set() };
     (c.jp ? setInfo[ns].jp : setInfo[ns].en).add(String(c.number));
   });
   // Merge key: if a set holds a single card across languages (<=1 EN number and <=1 JP number),
   // merge EN+JP+holo+common into ONE unique card (by name+set). Otherwise keep numbers separate.
   const mergeKey = c => {
-    const info = setInfo[c.name + "|" + c.set];
-    return (info.en.size <= 1 && info.jp.size <= 1) ? (c.name + "|" + c.set) : (c.name + "|" + c.set + "|" + c.number);
+    const cs = canonSet(c.set); const info = setInfo[c.name + "|" + cs];
+    return (info.en.size <= 1 && info.jp.size <= 1) ? (c.name + "|" + cs) : (c.name + "|" + cs + "|" + c.number);
   };
   const groups = new Map();
   filtered.forEach(c => {
