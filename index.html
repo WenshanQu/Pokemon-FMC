@@ -7,6 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f4efe4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Find My Card">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
   :root {
     --bg: #f4efe4;
@@ -189,6 +195,9 @@
   .miniflag.holo { background: linear-gradient(100deg, #b09bd6, #8fb0d6, #a2cbc8); color: #fff; }
   .pc-link { display: block; text-align: center; margin-top: 12px; padding: 10px; border-radius: 10px; background: #5f8fa8; color: #fff; font-weight: 700; font-size: 13.5px; text-decoration: none; }
   .pc-link:active { opacity: .82; }
+  .offline-btn { display:inline-block; margin:0 auto 8px; padding:8px 18px; border:1px solid var(--border); border-radius:99px; background:var(--card-bg); color:var(--text-dim); font-size:12.5px; font-weight:700; cursor:pointer; }
+  .offline-btn:disabled { opacity:.55; }
+  .offline-prog { font-size:12px; color:var(--text-dim); margin-bottom:6px; }
   .prices { padding: 0 14px 12px; }
   table.pricetable { width: 100%; border-collapse: collapse; }
   .pricetable th, .pricetable td { text-align: center; padding: 8px 4px; font-size: 14px; border-top: 1px solid var(--border); }
@@ -264,7 +273,7 @@
 
 <div id="lightbox"><img id="lightboxImg" alt=""></div>
 
-<footer>价格来源 PriceCharting · 美元按拉取当日汇率换算新币<br>发截图给 Claude 即可添加新卡</footer>
+<footer><button id="offlineBtn" class="offline-btn">📥 离线缓存全部卡图（约150MB）</button><div id="offlineProg" class="offline-prog"></div>价格来源 PriceCharting · 美元按拉取当日汇率换算新币<br>发截图给 Claude 即可添加新卡</footer>
 
 <script>
 /* ============================================================
@@ -2241,6 +2250,29 @@ function showLightbox(src) {
 $('#lightbox').addEventListener('click', () => $('#lightbox').style.display = 'none');
 
 render();
+
+// ---- PWA: service worker + offline image precache ----
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }
+(function () {
+  var btn = document.getElementById('offlineBtn'), prog = document.getElementById('offlineProg');
+  if (!btn) return;
+  var saved = localStorage.getItem('fmc-cached-count');
+  if (saved) prog.textContent = '已离线缓存 ' + saved + ' 张卡图';
+  btn.addEventListener('click', async function () {
+    if (!('caches' in window)) { prog.textContent = '此浏览器不支持离线缓存'; return; }
+    var urls = Array.from(new Set(CARDS.map(function (c) { return c.img; }).filter(Boolean)));
+    btn.disabled = true;
+    var cache = await caches.open('fmc-v1'), done = 0, ok = 0;
+    for (var i = 0; i < urls.length; i++) {
+      try { var m = await cache.match(urls[i]); if (!m) { await cache.add(urls[i]); } ok++; } catch (e) {}
+      done++;
+      if (done % 3 === 0 || done === urls.length) prog.textContent = '缓存中… ' + done + '/' + urls.length;
+    }
+    prog.textContent = '✓ 已离线缓存 ' + ok + '/' + urls.length + ' 张，可离线使用';
+    localStorage.setItem('fmc-cached-count', ok);
+    btn.disabled = false;
+  });
+})();
 </script>
 </body>
 </html>
