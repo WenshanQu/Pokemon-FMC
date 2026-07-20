@@ -177,6 +177,11 @@
   .badge.jp { background: rgba(139,92,246,.14); color:#7c3aed; border:1px solid rgba(139,92,246,.45); }
   .badge.en { background: rgba(21,154,85,.14); color:var(--green); border:1px solid rgba(21,154,85,.45); }
   .badge.holo { background: linear-gradient(100deg, rgba(180,120,255,.18), rgba(78,140,255,.18), rgba(69,192,200,.18)); color: #7c3aed; border: 1px solid rgba(180,120,255,.5); }
+  .badge.have { background: #16a34a; color: #fff; border: none; font-weight: 700; }
+  .badge.miss { background: #dc2626; color: #fff; border: none; font-weight: 700; }
+  .miniflag.have { background: #16a34a; color: #fff; }
+  .miniflag.miss { background: #dc2626; color: #fff; }
+  .miniflag.holo { background: linear-gradient(100deg, #b478ff, #4e8cff, #45c0c8); color: #fff; }
   .prices { padding: 0 14px 12px; }
   table.pricetable { width: 100%; border-collapse: collapse; }
   .pricetable th, .pricetable td { text-align: center; padding: 8px 4px; font-size: 14px; border-top: 1px solid var(--border); }
@@ -2022,26 +2027,22 @@ function priceCell(p, kind) {
 }
 function badgeHtml(c) {
   const b = [];
-  if (c.jp) {
-    if (c.own && c.own.n) b.push(`<span class="badge qty">普通 ×${c.own.n}</span>`);
-    if (c.own && c.own.h) b.push(`<span class="badge holo">闪 ×${c.own.h}</span>`);
-    if (!c.own || (!c.own.n && !c.own.h)) b.push('<span class="badge no1ed">未持有</span>');
-    if (c.vintage) b.push(`<span class="badge no1ed">老卡${c.rar ? ' · ' + c.rar : ''}</span>`);
-    return b.join('');
-  }
-  if (c.catalog) b.push('<span class="badge cat">补充·待核</span>');
-  if (c.missing) {
-    if (c.promo) b.push('<span class="badge need-unl">缺</span>');
+  const dual = !c.jp && !c.promo && !c.no1ed;
+  if (dual) {
+    const n1 = c.qty1ed || 0, nu = c.qtyUnl || 0;
+    b.push(n1 > 0 ? `<span class="badge have">1ED ×${n1}</span>` : '<span class="badge miss">缺 1ED</span>');
+    b.push(nu > 0 ? `<span class="badge have">UNL ×${nu}</span>` : '<span class="badge miss">缺 UNL</span>');
+  } else {
+    let n = 0, h = 0;
+    if (c.jp) { n = (c.own && c.own.n) || 0; h = (c.own && c.own.h) || 0; }
+    else if (c.holo) { h = c.qty || 0; }
+    else { n = c.qty || 0; }
+    if (n + h === 0) b.push('<span class="badge miss">缺</span>');
     else {
-      if (c.missing === '1ED' || c.missing === 'BOTH') b.push('<span class="badge need-1ed">缺 1ED</span>');
-      if (c.missing === 'UNL' || c.missing === 'BOTH') b.push('<span class="badge need-unl">缺 Unlimited</span>');
+      if (n > 0) b.push(`<span class="badge have">有 ×${n}</span>`);
+      if (h > 0) b.push(`<span class="badge holo">闪 ×${h}</span>`);
     }
   }
-  if (c.qty1ed) b.push(`<span class="badge qty">已有 1ED ×${c.qty1ed}</span>`);
-  if (c.qtyUnl) b.push(`<span class="badge qty">已有 UNL ×${c.qtyUnl}</span>`);
-  if (c.qty) b.push(`<span class="badge qty">已有 ×${c.qty}</span>`);
-  if (c.holo) b.push('<span class="badge holo">✦ Reverse Holo</span>');
-  if (c.promo) b.push('<span class="badge no1ed">Promo</span>');
   return b.join('');
 }
 function jpCardHtml(c) {
@@ -2062,15 +2063,22 @@ function jpCardHtml(c) {
 }
 function tileFlags(c) {
   const f = [];
-  if (c.jp) {
-    const own = jpOwned(c);
-    if (own > 0) f.push(`<span class="miniflag qty">×${own}</span>`);
+  const dual = !c.jp && !c.promo && !c.no1ed;
+  if (dual) {
+    const n1 = c.qty1ed || 0, nu = c.qtyUnl || 0;
+    f.push(n1 > 0 ? '<span class="miniflag have">1ED</span>' : '<span class="miniflag miss">缺1ED</span>');
+    f.push(nu > 0 ? '<span class="miniflag have">UNL</span>' : '<span class="miniflag miss">缺UNL</span>');
   } else {
-    if (c.missing === '1ED' || c.missing === 'BOTH') f.push('<span class="miniflag need-1ed">缺1ED</span>');
-    if (c.missing === 'UNL' || c.missing === 'BOTH') f.push('<span class="miniflag need-unl">缺UNL</span>');
-    if (c.promo && c.missing) f.push('<span class="miniflag need-unl">缺</span>');
-    const own = ownedCount(c);
-    if (own > 0 && !c.missing) f.push(`<span class="miniflag qty">×${own}</span>`);
+    let n = 0, h = 0;
+    if (c.jp) { n = (c.own && c.own.n) || 0; h = (c.own && c.own.h) || 0; }
+    else if (c.holo) { h = c.qty || 0; }
+    else { n = c.qty || 0; }
+    const owned = n + h;
+    if (owned === 0) f.push('<span class="miniflag miss">缺</span>');
+    else {
+      f.push(`<span class="miniflag have">有${owned > 1 ? ' ×' + owned : ''}</span>`);
+      if (h > 0) f.push('<span class="miniflag holo">闪</span>');
+    }
   }
   return f.join('');
 }
