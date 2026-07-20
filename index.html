@@ -184,6 +184,8 @@
   .miniflag.miss { background: #d4a59a; color: #5e332c; }
   .miniflag.miss-ed { background: #d9c78d; color: #5f4f22; }
   .miniflag.holo { background: linear-gradient(100deg, #bcaad4, #a0b7d2, #a9cac6); color: #39354e; }
+  .pc-link { display: block; text-align: center; margin-top: 12px; padding: 10px; border-radius: 10px; background: #9db0bd; color: #263640; font-weight: 700; font-size: 13.5px; text-decoration: none; }
+  .pc-link:active { opacity: .82; }
   .tile-holo { background: rgba(170,150,196,.92) !important; color: #fff !important; }
   .prices { padding: 0 14px 12px; }
   table.pricetable { width: 100%; border-collapse: collapse; }
@@ -1803,7 +1805,7 @@ const CARDS = [
   { name: "Psyduck & Slowpoke", number: "95", set: "SM11", jp: true, img: "images/7b15cf258037c1c3.png", own: { n: 0, h: 0 } },
   { name: "Psyduck & Slowpoke", number: "96", set: "SM11", jp: true, img: "images/c81c43f0c044de7f.png", own: { n: 0, h: 0 } },
   { name: "Psyduck", number: "53/62", set: "Fossil", jp: true, vintage: true, rar: "C", img: "images/ee66b8cc6701e81b.jpg", own: { n: 0, h: 0 } },
-  { name: "Psyduck", number: "65/82", set: "Team Rocket", jp: true, vintage: true, rar: "C", img: "images/tr_psyduck_65.jpg", own: { n: 1, h: 0 } },
+  { name: "Psyduck", number: "65/82", set: "Team Rocket", jp: true, vintage: true, rar: "C", pc: "https://www.pricecharting.com/game/pokemon-team-rocket/psyduck-65", img: "images/tr_psyduck_65.jpg", own: { n: 1, h: 0 } },
   { name: "Psyduck", number: "79/105", set: "Neo Destiny", jp: true, vintage: true, rar: "C", img: "images/40016286738144bf.jpg", own: { n: 0, h: 0 } },
   { name: "Psyduck", number: "020/092", set: "Aquapolis", jp: true, vintage: true, rar: "C", img: "images/7aec55b6dfe3003c.jpg", own: { n: 0, h: 0 } },
   { name: "Psyduck", number: "014/053", set: "EX Sandstorm", jp: true, vintage: true, rar: "C", img: "images/a8207addf18f7d5a.jpg", own: { n: 1, h: 0 } },
@@ -1993,13 +1995,13 @@ const CARDS = [
   { name: "Slowpoke", number: 16, set: "Dark Rush", jp: true, img: "images/jp_slowpoke_darkrush_16.png", own: { n: 1, h: 0 } },
   { name: "Slowpoke", number: 29, set: "Snow Hazard", jp: true, img: "images/jp_slowpoke_snowhazard_29.png", own: { n: 1, h: 0 } },
   { name: "Mega Slowbro ex", number: 71, numDisplay: "71/M-P", set: "M-P Promo", jp: true, img: "images/jp_mega_slowbro_ex_mp_71.png", own: { n: 1, h: 0 } },
-  { name: "Dark Slowbro", number: 36, set: "Rocket Gang", jp: true, img: "images/jp_dark_slowbro_36.png", own: { n: 1, h: 0 } },
-  { name: "Sabrina's Slowbro", number: 48, set: "Challenge from the Darkness", jp: true, img: "images/jp_sabrina_slowbro_48.png", own: { n: 1, h: 0 } },
-  { name: "Slowpoke", number: 79, set: "Playmat Promo", jp: true, img: "images/jp_slowpoke_playmat_79.png", own: { n: 1, h: 0 } },
-  { name: "Psyduck", number: 26, set: "Neo Destiny", jp: true, img: "images/jp_psyduck_neo_26.png", own: { n: 1, h: 0 } },  { name: "Misty's Quagsire", number: "058/141", set: "Pokémon VS", jp: true, vintage: true, rar: "C", img: "images/jp_misty_quagsire_58.jpg", own: { n: 0, h: 0 } },
-  { name: "Sabrina's Slowpoke", number: 44, set: "Challenge from the Darkness", jp: true, img: "images/jp_sabrina_slowpoke_44.png", own: { n: 0, h: 0 } },
-  { name: "Giovanni's Meowth", number: 52, set: "Challenge from the Darkness", jp: true, img: "images/jp_giovanni_meowth_52.jpg", own: { n: 0, h: 0 } },
-  { name: "Giovanni's Meowth", number: 52, numDisplay: "52 (Lv.17)", set: "Challenge from the Darkness", jp: true, vintage: true, rar: "R", img: "images/jp_giovanni_meowth_lv17_52.jpg", own: { n: 0, h: 0 } },  { name: "Slowpoke", number: "022/086", set: "Holon Research", jp: true, vintage: true, rar: "C", img: "images/jp_slowpoke_holon_22.jpg", own: { n: 1, h: 0 } },
+  { name: "Dark Slowbro", number: 36, set: "Rocket Gang", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-rocket-gang/dark-slowbro-80", img: "images/jp_dark_slowbro_36.png", own: { n: 1, h: 0 } },
+  { name: "Sabrina's Slowbro", number: 48, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowbro-48", img: "images/jp_sabrina_slowbro_48.png", own: { n: 1, h: 0 } },
+  { name: "Slowpoke", number: 79, set: "Playmat Promo", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-promo/slowpoke-playmat-79", img: "images/jp_slowpoke_playmat_79.png", own: { n: 1, h: 0 } },
+  { name: "Psyduck", number: 26, set: "Neo Destiny", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-darkness-and-to-light/psyduck", img: "images/jp_psyduck_neo_26.png", own: { n: 1, h: 0 } },  { name: "Misty's Quagsire", number: "058/141", set: "Pokémon VS", jp: true, vintage: true, rar: "C", pc: "https://www.pricecharting.com/game/pokemon-japanese-vs/misty%27s-quagsire-58", img: "images/jp_misty_quagsire_58.jpg", own: { n: 0, h: 0 } },
+  { name: "Sabrina's Slowpoke", number: 44, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowpoke-79", img: "images/jp_sabrina_slowpoke_44.png", own: { n: 0, h: 0 } },
+  { name: "Giovanni's Meowth", number: 52, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-52", img: "images/jp_giovanni_meowth_52.jpg", own: { n: 0, h: 0 } },
+  { name: "Giovanni's Meowth", number: 52, numDisplay: "52 (Lv.17)", set: "Challenge from the Darkness", jp: true, vintage: true, rar: "R", pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-lv-17-52", img: "images/jp_giovanni_meowth_lv17_52.jpg", own: { n: 0, h: 0 } },  { name: "Slowpoke", number: "022/086", set: "Holon Research", jp: true, vintage: true, rar: "C", pc: "https://www.pricecharting.com/game/pokemon-japanese-holon-research/slowpoke-1st-edition-22", img: "images/jp_slowpoke_holon_22.jpg", own: { n: 1, h: 0 } },
 ];
 
 const $ = s => document.querySelector(s);
@@ -2062,6 +2064,7 @@ function jpCardHtml(c) {
       </div>
     </div>
     ${jpPriceTable(c)}
+    <a class="pc-link" href="${pcUrl(c)}" target="_blank" rel="noopener noreferrer">PriceCharting 查看实时价 ↗</a>
   </div>`;
 }
 function tileFlags(c) {
@@ -2105,6 +2108,11 @@ function tileHtml(c, idx) {
     </div>
   </div>`;
 }
+function pcUrl(c) {
+  if (c.pc) return c.pc;
+  const q = encodeURIComponent((c.name + ' ' + (c.numDisplay || c.number) + ' ' + c.set).replace(/#/g, ' '));
+  return 'https://www.pricecharting.com/search-products?q=' + q + '&type=prices';
+}
 function cardHtml(c) {
   if (c.jp) return jpCardHtml(c);
   const img = c.img
@@ -2131,6 +2139,7 @@ function cardHtml(c) {
       </table>
     </div>
     ${c.priceDate ? `<div class="price-date">价格更新于 ${c.priceDate}</div>` : ''}
+    <a class="pc-link" href="${pcUrl(c)}" target="_blank" rel="noopener noreferrer">PriceCharting 查看实时价 ↗</a>
   </div>`;
 }
 
