@@ -217,6 +217,8 @@
     background: rgba(0,0,0,.5); color: #fff; font-size: 16px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   }
+  #detail .detail-copy { position: absolute; top: 10px; right: 50px; z-index: 2; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,.38); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  #detail .detail-copy.copied { background: #6ea15c; }
   /* image lightbox */
   #lightbox {
     display: none; position: fixed; inset: 0; z-index: 99;
@@ -2129,7 +2131,7 @@ function cardHtml(c) {
     </div>
     <div class="prices">
       <table class="pricetable">
-        ${c.promo
+        ${(c.promo || c.no1ed)
           ? `<tr><th class="rowlabel"></th><th>单一版本</th></tr>
              <tr><td class="rowlabel">裸卡</td>${priceCell(c.prices?.unl, 'raw')}</tr>
              <tr><td class="rowlabel">PSA 10</td>${priceCell(c.prices?.unl, 'psa')}</tr>`
@@ -2198,11 +2200,30 @@ document.querySelectorAll('.langbtn').forEach(btn => btn.addEventListener('click
 }));
 clearBtn.addEventListener('click', () => { searchEl.value = ''; render(); searchEl.focus(); });
 
+function cardInfoString(c) {
+  const lang = c.jp ? 'JP' : 'ENG';
+  const num = c.numDisplay || c.number;
+  let own;
+  if (c.jp) { const n = (c.own && c.own.n) || 0, h = (c.own && c.own.h) || 0; own = (n + h) ? ('普通×' + n + ' 闪×' + h) : '未持有'; }
+  else if (!c.no1ed && !c.promo) { own = '1ED×' + (c.qty1ed || 0) + ' UNL×' + (c.qtyUnl || 0); }
+  else if (c.holo) { own = c.qty ? ('闪×' + c.qty) : '未持有'; }
+  else { own = c.qty ? ('有×' + c.qty) : '未持有'; }
+  return '[FMC] ' + c.name + ' | ' + c.set + ' | #' + num + ' | ' + lang + ' | ' + own;
+}
+function copyCard(idx) {
+  const c = currentList[idx];
+  if (!c) return;
+  const s = cardInfoString(c);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s);
+  else { const ta = document.createElement('textarea'); ta.value = s; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  const btn = document.querySelector('.detail-copy');
+  if (btn) { btn.classList.add('copied'); setTimeout(function () { btn.classList.remove('copied'); }, 1300); }
+}
 function openDetail(idx) {
   const c = currentList[idx];
   if (!c) return;
   $('#detail .detail-inner').innerHTML =
-    '<button class="detail-close" onclick="closeDetail()">✕</button>' + cardHtml(c);
+    '<button class="detail-close" onclick="closeDetail()">✕</button>' + '<button class="detail-copy" onclick="copyCard(' + idx + ')" title="复制卡片信息"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>' + cardHtml(c);
   $('#detail').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
