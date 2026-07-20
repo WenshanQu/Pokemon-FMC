@@ -2076,8 +2076,7 @@ function tileFlags(c) {
     const owned = n + h;
     if (owned === 0) f.push('<span class="miniflag miss">缺</span>');
     else {
-      f.push(`<span class="miniflag have">有${owned > 1 ? ' ×' + owned : ''}</span>`);
-      if (h > 0) f.push('<span class="miniflag holo">闪</span>');
+      f.push('<span class="miniflag have">有</span>');
     }
   }
   return f.join('');
