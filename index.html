@@ -199,6 +199,25 @@
   .offline-btn { display:inline-block; margin:0 auto 8px; padding:8px 18px; border:1px solid var(--border); border-radius:99px; background:var(--card-bg); color:var(--text-dim); font-size:12.5px; font-weight:700; cursor:pointer; }
   .offline-btn:disabled { opacity:.55; }
   .offline-prog { font-size:12px; color:var(--text-dim); margin-bottom:6px; }
+  .moderow { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+  .modebtn { flex: 0 0 auto; background: var(--card-bg); border: 1px solid var(--border); color: var(--text-dim); font-size: 13px; font-weight: 700; padding: 6px 18px; border-radius: 99px; cursor: pointer; }
+  .modebtn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  body.dex-mode .searchbox { display: none; }
+  .dex-sec { margin: 0 0 24px; }
+  .dex-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; padding: 0 2px; }
+  .dex-fam { font-family: 'Fredoka', system-ui, sans-serif; font-size: 19px; font-weight: 600; color: var(--text); }
+  .dex-prog-txt { font-size: 12.5px; color: var(--text-dim); font-weight: 700; }
+  .dex-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 12px; }
+  .dex-bar-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width .3s; }
+  .dex-row { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 10px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+  .dex-card { flex: 0 0 auto; width: 122px; cursor: pointer; scroll-snap-align: start; }
+  .dex-imgwrap { position: relative; width: 100%; aspect-ratio: 63/88; border-radius: 9px; overflow: hidden; background: var(--card-bg-2); border: 1px solid var(--border); }
+  .dex-imgwrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .dex-imgwrap .noimg { color: var(--text-dim); font-size: 10px; text-align: center; padding: 6px; line-height: 1.4; display: flex; align-items: center; justify-content: center; height: 100%; }
+  .dex-card.missing .dex-imgwrap img { filter: grayscale(1) opacity(.45); }
+  .dex-miss { position: absolute; left: 6px; bottom: 6px; background: #d07f70; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; }
+  .dex-name { font-size: 12px; font-weight: 700; color: var(--text); margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dex-meta { font-size: 10.5px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .prices { padding: 0 14px 12px; }
   table.pricetable { width: 100%; border-collapse: collapse; }
   .pricetable th, .pricetable td { text-align: center; padding: 8px 4px; font-size: 14px; border-top: 1px solid var(--border); }
@@ -263,6 +282,10 @@
     <button class="langbtn active" data-lang="all">全部</button>
     <button class="langbtn" data-lang="en">ENG</button>
     <button class="langbtn" data-lang="jp">JP</button>
+  </div>
+  <div class="moderow">
+    <button class="modebtn active" data-mode="grid">🔍 搜索</button>
+    <button class="modebtn" data-mode="dex">📖 图鉴</button>
   </div>
   <div class="hint" id="hint"></div>
   </div>
@@ -1803,11 +1826,11 @@ const CARDS = [
   { name: "Psyduck", number: "056", set: "ADV-P Promo", jp: true, vintage: true, rar: "Promo", img: "images/jp_psyduck_advp_56.jpg", own: { n: 1, h: 0 } },
   { name: "Psyduck", number: "001/020", set: "EX TR Returns", jp: true, vintage: true, rar: "C", img: "images/e49f23f630e2f8ad.jpg", own: { n: 0, h: 0 } },
   { name: "Psyduck δ", number: "018/052", set: "EX Holon Phantoms", jp: true, vintage: true, rar: "C", img: "images/3aee58906e83d1e6.jpg", own: { n: 0, h: 0 } },
-  { name: "Psyduck", number: "?", set: "Secret Wonders", jp: true, vintage: true, rar: "C", img: "images/a2e207b29bbb6a3c.jpg", own: { n: 0, h: 0 } },
+  { name: "Psyduck", number: "059", set: "Secret Wonders", jp: true, vintage: true, rar: "C", img: "images/a2e207b29bbb6a3c.jpg", own: { n: 0, h: 0 } },
   { name: "Psyduck", number: "026/096", set: "Platinum", jp: true, vintage: true, rar: "C", img: "images/65fb1fa2199fe3b9.jpg", own: { n: 1, h: 0 } },
   { name: "Psyduck", number: "015/080", set: "Triumphant", jp: true, vintage: true, rar: "C", img: "images/f3904329a5c73d32.jpg", own: { n: 1, h: 0 } },
   { name: "Slowpoke", number: "012/048", set: "Pokémon Web", jp: true, vintage: true, rar: "C", img: "images/64dce690186db9ee.jpg", own: { n: 0, h: 0 } },
-  { name: "Slowpoke", number: "?", set: "Fossil", jp: true, vintage: true, rar: "C", img: "images/0400804b450b2ddd.jpg", own: { n: 1, h: 0 } },
+  { name: "Slowpoke", number: "079", set: "Fossil", jp: true, vintage: true, rar: "C", img: "images/0400804b450b2ddd.jpg", own: { n: 1, h: 0 } },
   { name: "Slowpoke", number: "67/82", set: "Team Rocket", jp: true, vintage: true, rar: "C", img: "images/bc63db78c39164b5.jpg", own: { n: 1, h: 0 } },
   { name: "Slowpoke", number: "73/111", set: "Neo Genesis", jp: true, vintage: true, rar: "C", img: "images/da07bf82a2d3d5ee.jpg", own: { n: 0, h: 0 } },
   { name: "Slowpoke", number: "031/087", set: "Aquapolis", jp: true, vintage: true, rar: "C", img: "images/jp_slowpoke_aquapolis_31.jpg", own: { n: 0, h: 0 } },
@@ -1816,39 +1839,39 @@ const CARDS = [
   { name: "Slowpoke", number: "040/106", set: "EX Unseen Forces", jp: true, vintage: true, rar: "C", img: "images/9bf58910c70ead86.jpg", own: { n: 0, h: 0 } },
   { name: "Slowpoke", number: "022/086", set: "EX Delta Species", jp: true, vintage: true, rar: "C", pc: "https://www.pricecharting.com/game/pokemon-japanese-holon-research/slowpoke-1st-edition-22", img: "images/jp_slowpoke_holon_22.jpg", own: { n: 1, h: 0 } },
   { name: "Slowpoke", number: "017/070", set: "HeartGold SoulSilver", jp: true, vintage: true, rar: "C", img: "images/cb368a4274fa4b53.jpg", own: { n: 0, h: 0 } },
-  { name: "Slowbro", number: "?", set: "Fossil", jp: true, vintage: true, rar: "U", img: "images/9241f18418db3baa.jpg", own: { n: 1, h: 0 } },
+  { name: "Slowbro", number: "080", set: "Fossil", jp: true, vintage: true, rar: "U", img: "images/9241f18418db3baa.jpg", own: { n: 1, h: 0 } },
   { name: "Slowbro", number: "032/087", set: "Aquapolis", jp: true, vintage: true, rar: "U", img: "images/ba96c008d3810383.png", own: { n: 0, h: 0 } },
   { name: "Slowbro", number: "045/082", set: "EX FireRed LeafGreen", jp: true, vintage: true, rar: "Holo", img: "images/2ddbe701758e5949.jpg", own: { n: 0, h: 0 } },
   { name: "Slowbro", number: "023/106", set: "EX Unseen Forces", jp: true, vintage: true, rar: "Holo", img: "images/320051eb58305343.jpg", own: { n: 0, h: 0 } },
   { name: "Slowbro", number: "018/070", set: "HeartGold SoulSilver", jp: true, vintage: true, rar: "R", img: "images/eb8a962775292865.jpg", own: { n: 0, h: 0 } },
-  { name: "Dark Slowbro", number: "?", set: "Team Rocket", jp: true, vintage: true, rar: "R", img: "images/75517e48116b73a6.jpg", own: { n: 0, h: 0 } },
+  { name: "Dark Slowbro", number: "080", set: "Team Rocket", jp: true, vintage: true, rar: "R", img: "images/75517e48116b73a6.jpg", own: { n: 0, h: 0 } },
   { name: "Dark Slowbro", number: "028/048", set: "Pokémon Web", jp: true, vintage: true, rar: "U", img: "images/jp_dark_slowbro_web_28.jpg", own: { n: 0, h: 0 } },
-  { name: "Sabrina's Slowbro", number: "?", set: "Gym Challenge", jp: true, vintage: true, rar: "U", img: "images/9088385d1e84ad4d.jpg", own: { n: 0, h: 0 } },
-  { name: "Light Slowbro", number: "?", set: "Neo Destiny", jp: true, vintage: true, rar: "U", img: "images/8418b9e7bcf7212b.jpg", own: { n: 0, h: 0 } },
+  { name: "Sabrina's Slowbro", number: "080", set: "Gym Challenge", jp: true, vintage: true, rar: "U", img: "images/9088385d1e84ad4d.jpg", own: { n: 0, h: 0 } },
+  { name: "Light Slowbro", number: "080", set: "Neo Destiny", jp: true, vintage: true, rar: "U", img: "images/8418b9e7bcf7212b.jpg", own: { n: 0, h: 0 } },
   { name: "Will's Slowbro", number: "072/141", set: "Pokémon VS", jp: true, vintage: true, rar: "C", img: "images/5b2b75d3ab68a1c7.jpg", own: { n: 0, h: 0 } },
-  { name: "Slowking", number: "?", set: "Neo Genesis", jp: true, vintage: true, rar: "Holo", img: "images/549d6cc108c609e1.jpg", own: { n: 0, h: 0 } },
-  { name: "Slowking", number: "?", set: "Southern Islands", jp: true, vintage: true, rar: "—", img: "images/d08423f03e1d61fa.jpg", own: { n: 0, h: 0 } },
+  { name: "Slowking", number: "199", set: "Neo Genesis", jp: true, vintage: true, rar: "Holo", img: "images/549d6cc108c609e1.jpg", own: { n: 0, h: 0 } },
+  { name: "Slowking", number: "199", set: "Southern Islands", jp: true, vintage: true, rar: "—", img: "images/d08423f03e1d61fa.jpg", own: { n: 0, h: 0 } },
   { name: "Slowking", number: "053/087", set: "Aquapolis", jp: true, vintage: true, rar: "Holo", img: "images/663d3fae3098a364.jpg", own: { n: 0, h: 0 } },
   { name: "Slowking", number: "052/087", set: "Aquapolis", jp: true, vintage: true, rar: "R", img: "images/jp_slowking_aquapolis_52.jpg", own: { n: 0, h: 0 } },
   { name: "Slowking", number: "042/106", set: "EX Unseen Forces", jp: true, vintage: true, rar: "Holo", img: "images/bceb9166ad83ea0f.jpg", own: { n: 0, h: 0 } },
   { name: "Slowking", number: "025/086", set: "EX Delta Species", jp: true, vintage: true, rar: "R", img: "images/e35b43236c220da9.jpg", own: { n: 0, h: 0 } },
-  { name: "Dark Slowking", number: "?", set: "Neo Destiny", jp: true, vintage: true, rar: "—", img: "images/683b6e6d9c86690a.jpg", own: { n: 0, h: 0 } },
+  { name: "Dark Slowking", number: "199", set: "Neo Destiny", jp: true, vintage: true, rar: "—", img: "images/683b6e6d9c86690a.jpg", own: { n: 0, h: 0 } },
   { name: "Dark Slowking", number: "044/084", set: "EX TR Returns", jp: true, vintage: true, rar: "Holo", img: "images/61887ac40b796537.jpg", own: { n: 0, h: 0 } },
   { name: "Will's Slowking", number: "077/141", set: "Pokémon VS", jp: true, vintage: true, rar: "C", img: "images/be67b7af7dcbfb42.jpg", own: { n: 1, h: 0 } },
-  { name: "Meowth", number: "?", set: "Jungle", jp: true, vintage: true, rar: "C", img: "images/842fb03aad2dba14.jpg", own: { n: 0, h: 0 } },
+  { name: "Meowth", number: "052", set: "Jungle", jp: true, vintage: true, rar: "C", img: "images/842fb03aad2dba14.jpg", own: { n: 0, h: 0 } },
   { name: "Meowth", number: "029/128", set: "Expedition", jp: true, vintage: true, rar: "C", img: "images/7f9123c7c5d6a07a.jpg", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "062/088", set: "Skyridge", jp: true, vintage: true, rar: "C", img: "images/59a65a44419a1ba7.jpg", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "059/086", set: "EX Delta Species", jp: true, vintage: true, rar: "C", img: "images/4ff36d972740460e.jpg", own: { n: 0, h: 0 } },
   { name: "Meowth", number: "038/052", set: "EX Holon Phantoms", jp: true, vintage: true, rar: "C", img: "images/2c0bdd3a398fd9ad.jpg", own: { n: 2, h: 0 } },
-  { name: "Meowth", number: "?", set: "Legends Awakened", jp: true, vintage: true, rar: "C", img: "images/f6ecf04148c9fa15.jpg", own: { n: 1, h: 0 } },
+  { name: "Meowth", number: "057", set: "Legends Awakened", jp: true, vintage: true, rar: "C", img: "images/f6ecf04148c9fa15.jpg", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "053/070", set: "HeartGold SoulSilver", jp: true, vintage: true, rar: "C", img: "images/0aa8943a0fbd010d.jpg", own: { n: 2, h: 2 } },
-  { name: "Quagsire", number: "?", set: "Neo Genesis", jp: true, vintage: true, rar: "U", img: "images/7d4fbbd0f674c263.jpg", own: { n: 12, h: 0 } },
-  { name: "Quagsire", number: "?", set: "Neo Revelation", jp: true, vintage: true, rar: "C", img: "images/d5a6cb5787cd7e8a.jpg", own: { n: 0, h: 0 } },
+  { name: "Quagsire", number: "195", set: "Neo Genesis", jp: true, vintage: true, rar: "U", img: "images/7d4fbbd0f674c263.jpg", own: { n: 12, h: 0 } },
+  { name: "Quagsire", number: "195", set: "Neo Revelation", jp: true, vintage: true, rar: "C", img: "images/d5a6cb5787cd7e8a.jpg", own: { n: 0, h: 0 } },
   { name: "Quagsire", number: "029/092", set: "Aquapolis", jp: true, vintage: true, rar: "U", img: "images/11f16bf4f78090bf.jpg", own: { n: 2, h: 0 } },
   { name: "Quagsire", number: "027/084", set: "EX TR Returns", jp: true, vintage: true, rar: "R", img: "images/f26ee126ad155e41.jpg", own: { n: 1, h: 0 } },
   { name: "Quagsire", number: "006/016", set: "EX Unseen Forces", jp: true, vintage: true, rar: "—", img: "images/08a476fddbd0d530.jpg", own: { n: 1, h: 0 } },
   { name: "Quagsire", number: "006/068", set: "EX Dragon Frontiers", jp: true, vintage: true, rar: "R", img: "images/478653145b5d7b72.png", own: { n: 1, h: 0 } },
-  { name: "Quagsire", number: "?", set: "Secret Wonders", jp: true, vintage: true, rar: "U", img: "images/e2c916b87903d8c0.jpg", own: { n: 1, h: 0 } },
+  { name: "Quagsire", number: "224", set: "Secret Wonders", jp: true, vintage: true, rar: "U", img: "images/e2c916b87903d8c0.jpg", own: { n: 1, h: 0 } },
   { name: "Quagsire", number: "027/070", set: "HeartGold SoulSilver", jp: true, vintage: true, rar: "Holo", img: "images/2b7b2ce981f50d56.jpg", own: { n: 7, h: 1 } },
   { name: "Meowth", number: 56, total: null, set: "Jungle",
     missing: "UNL", no1ed: true, catalog: true,
@@ -2001,6 +2024,7 @@ let activeSet = null;
 let activeTab = 'need';
 let activeLang = 'all';
 let currentList = [];
+let viewMode = 'grid';
 const ownedCount = c => (c.qty1ed || 0) + (c.qtyUnl || 0) + (c.qty || 0);
 const jpOwned = c => (c.own ? (c.own.n || 0) + (c.own.h || 0) : 0);
 const JPRICE={"M2a/199":{"ru":20.65,"pu":164.75,"r":26.68,"p":213},"SV2a/54":{"ru":3.7,"pu":43,"r":4.78,"p":55.56},"SV2a/175":{"ru":24.52,"pu":120.24,"r":31.68,"p":155},"S10P/16":{"ru":2,"pu":75.97,"r":2.58,"p":98.15},"SM9/24":{"ru":3.49,"pu":240,"r":4.51,"p":310},"SM1S/12":{"ru":15.59,"pu":155.95,"r":20.14,"p":201},"SV4a/219":{"ru":6.22,"pu":61.75,"r":8.04,"p":79.78},"SV2a/79":{"ru":1.93,"pu":256.25,"r":2.49,"p":331},"SV1V/19":{"ru":1.62,"pu":37.56,"r":2.09,"p":48.53},"SV1V/82":{"ru":6.5,"pu":31,"r":8.4,"p":40.05},"MP/70":{"ru":12.65,"pu":121,"r":16.34,"p":156},"SM9b/11":{"ru":2.74,"pu":305,"r":3.54,"p":394},"SV4a/220":{"ru":4.7,"pu":68,"r":6.07,"p":87.86},"SV1V/20":{"ru":1.9,"pu":60.5,"r":2.45,"p":78.17},"S10b/20":{"ru":1.98,"pu":44.99,"r":2.56,"p":58.13},"SM9b/12":{"ru":2.99,"pu":149.99,"r":3.86,"p":194},"BW4/17":{"ru":2.99,"pu":73.17,"r":3.86,"p":94.54},"SV7/39":{"ru":1.97,"pu":38,"r":2.55,"p":49.1},"XY9/15":{"ru":11.02,"pu":112.96,"r":14.24,"p":146},"M3/61":{"ru":1.99,"pu":40,"r":2.57,"p":51.68},"M3/100":{"ru":12.54,"pu":126.75,"r":16.2,"p":164},"SV6a/48":{"ru":1.7,"pu":36.47,"r":2.2,"p":47.12},"SV2a/52":{"ru":1.79,"pu":47.79,"r":2.31,"p":61.74},"SVP/192":{"ru":91.42,"pu":147.07,"r":118.11,"p":190},"S6a/55":{"ru":1.78,"pu":36.89,"r":2.3,"p":47.66},"SM12a/105":{"ru":3.72,"pu":77.11,"r":4.81,"p":99.63},"SM10/67":{"ru":7.78,"pu":167.27,"r":10.05,"p":216},"SM9/71":{"ru":2.34,"pu":126.35,"r":3.02,"p":163},"XY7/61":{"ru":2.84,"pu":109.59,"r":3.67,"p":142},"BW3p/45":{"ru":4.22,"pu":81.27,"r":5.45,"p":105},"BWP/105":{"ru":25.37,"pu":239.3,"r":32.78,"p":309},"SVP/122":{"ru":5.34,"pu":115,"r":6.9,"p":149},"S3a/35":{"ru":1.8,"pu":null,"r":2.33,"p":null},"SP/311":{"ru":22.99,"pu":null,"r":29.7,"p":null},"SM9a/22":{"ru":1.98,"pu":102,"r":2.56,"p":132},"SM8b/24":{"ru":4.8,"pu":27.75,"r":6.2,"p":35.85},"SM8b/170":{"ru":27.14,"pu":89.99,"r":35.06,"p":116},"XY7/39":{"ru":2.76,"pu":115,"r":3.57,"p":149},"SM11/11":{"ru":47.24,"pu":240.5,"r":61.03,"p":311},"20th/23":{"ru":12,"pu":null,"r":15.5,"p":null},"M3/114":{"ru":85.9,"pu":279.99,"r":110.98,"p":362},"SMD/13":{"ru":35.47,"pu":267.71,"r":45.83,"p":346},"SMP/375":{"ru":66.53,"pu":null,"r":85.96,"p":null},"XYP/106":{"ru":109.33,"pu":218.67,"r":141.25,"p":283},"XYP/250":{"ru":23.2,"pu":null,"r":29.97,"p":null},"HSZ/25":{"ru":1.2,"pu":null,"r":1.55,"p":null},"SMJ/4":{"ru":0.53,"pu":null,"r":0.68,"p":null},"SMI/9":{"ru":0.53,"pu":null,"r":0.68,"p":null},"BW8n/11":{"ru":2.82,"pu":80,"r":3.64,"p":103},"Team Rocket/65/82/Psyduck":{"ru":3.43,"pu":610,"r":4.43,"p":788},"EX Sandstorm/014/053/Psyduck":{"ru":9.82,"pu":81,"r":12.69,"p":105},"ADV-P Promo/056/Psyduck":{"ru":26.67,"pu":null,"r":34.46,"p":null},"Platinum/026/096/Psyduck":{"ru":25.69,"pu":280.5,"r":33.19,"p":362},"Triumphant/015/080/Psyduck":{"ru":18.13,"pu":1350,"r":23.42,"p":1744},"Fossil/?/Slowpoke":{"ru":1.95,"pu":69.95,"r":2.52,"p":90.38},"Team Rocket/67/82/Slowpoke":{"ru":3.71,"pu":565,"r":4.79,"p":730},"EX TR Returns/040/084/Slowpoke":{"ru":8.1,"pu":225,"r":10.47,"p":291},"EX Delta Species/022/086/Slowpoke":{"ru":6.97,"pu":176.32,"r":9.01,"p":228},"Fossil/?/Slowbro":{"ru":2.99,"pu":567.32,"r":3.86,"p":733},"Expedition/029/128/Meowth":{"ru":4.91,"pu":1606.33,"r":6.34,"p":2075},"Skyridge/062/088/Meowth":{"ru":45.71,"pu":557,"r":59.06,"p":720},"EX Holon Phantoms/038/052/Meowth":{"ru":10.75,"pu":254.57,"r":13.89,"p":329},"HeartGold SoulSilver/053/070/Meowth":{"ru":3.35,"pu":82.98,"r":4.33,"p":107},"Neo Genesis/?/Quagsire":{"ru":2.99,"pu":189.5,"r":3.86,"p":245},"Aquapolis/029/092/Quagsire":{"ru":57.31,"pu":64,"r":74.04,"p":82.69},"EX TR Returns/027/084/Quagsire":{"ru":19.99,"pu":null,"r":25.83,"p":null},"EX Unseen Forces/006/016/Quagsire":{"ru":7.99,"pu":null,"r":10.32,"p":null},"EX Dragon Frontiers/006/068/Quagsire":{"ru":14.77,"pu":363.44,"r":19.08,"p":470},"Secret Wonders/?/Quagsire":{"ru":3.18,"pu":104.48,"r":4.11,"p":135},"HeartGold SoulSilver/027/070/Quagsire":{"ru":12.24,"pu":231.1,"r":15.81,"p":299},"Challenge from the Darkness/36":{"ru":4.48,"pu":1091,"r":5.79,"p":1409.57},"Nihil Zero/61":{"ru":1.99,"pu":40,"r":2.57,"p":51.68},"SV-P Promo/259":{"ru":20.55,"pu":null,"r":26.55,"p":null},"PCG-P Promo/47":{"ru":39.74,"pu":1481,"r":51.35,"p":1913.45},"Moonlit Pursuit/87":{"ru":3.61,"pu":600,"r":4.66,"p":775.2},"Moonlit Pursuit/85":{"ru":7.93,"pu":138.57,"r":10.25,"p":179.03},"HeartGold Collection/17":{"ru":3.28,"pu":374.01,"r":4.24,"p":483.22},"Dark Rush/16":{"ru":5.72,"pu":201.55,"r":7.39,"p":260.4},"Snow Hazard/29":{"ru":1.49,"pu":266,"r":1.93,"p":343.67},"M-P Promo/71":{"ru":15.59,"pu":75,"r":20.14,"p":96.9},"Playmat Promo/79":{"ru":80.85,"pu":null,"r":104.46,"p":null},"Rocket Gang/36":{"ru":20.25,"pu":1075.08,"r":26.16,"p":1388.9},"Challenge from the Darkness/48":{"ru":1.5,"pu":null,"r":1.94,"p":null},"Neo Destiny/26":{"ru":15,"pu":1383.75,"r":19.38,"p":1787.81},"Pokémon VS/058/141/Misty's Quagsire":{"ru":89,"pu":625.97,"r":114.99,"p":808.75},"Challenge from the Darkness/44":{"ru":1.99,"pu":null,"r":2.57,"p":null},"Challenge from the Darkness/52":{"ru":2.99,"pu":294.7,"r":3.86,"p":380.75},"Challenge from the Darkness/52/Giovanni's Meowth":{"ru":1.75,"pu":139.99,"r":2.26,"p":180.87}};
@@ -2142,7 +2166,70 @@ function parseQuery(q) {
   return { name: q, number: null };
 }
 
+const FAM_ORDER = ['Meowth', 'Psyduck', 'Slowpoke', 'Slowbro', 'Slowking', 'Quagsire', '其他'];
+function family(c) {
+  const n = c.name;
+  if (/Quagsire/i.test(n)) return 'Quagsire';
+  if (/Slowking/i.test(n)) return 'Slowking';
+  if (/Slowbro/i.test(n)) return 'Slowbro';
+  if (/Slowpoke/i.test(n)) return 'Slowpoke';
+  if (/Psyduck/i.test(n)) return 'Psyduck';
+  if (/Meowth/i.test(n)) return 'Meowth';
+  return '其他';
+}
+function isOwned(c) {
+  if (c.jp) return (((c.own && c.own.n) || 0) + ((c.own && c.own.h) || 0)) > 0;
+  if (!c.no1ed && !c.promo) return ((c.qty1ed || 0) + (c.qtyUnl || 0)) > 0;
+  return (c.qty || 0) > 0;
+}
+function dexTile(c, idx) {
+  const owned = isOwned(c);
+  const img = c.img
+    ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onerror="this.parentNode.innerHTML='&lt;div class=noimg&gt;图待补&lt;/div&gt;'">`
+    : `<div class="noimg">${c.set}<br>#${c.number}</div>`;
+  return `<div class="dex-card ${owned ? 'owned' : 'missing'}" onclick="openDetail(${idx})">
+    <div class="dex-imgwrap">${img}${owned ? '' : '<span class="dex-miss">缺</span>'}</div>
+    <div class="dex-name">${c.name}</div>
+    <div class="dex-meta">#${c.numDisplay || c.number} · ${c.set}</div>
+  </div>`;
+}
+function renderDex() {
+  const filtered = CARDS.filter(inLang);
+  // Collapse versions of the same card (ENG/JP/1ED/Holo/Common) into one unique card:
+  // key = name + set + number; owned if ANY version is owned.
+  const groups = new Map();
+  filtered.forEach(c => {
+    const key = c.name + "|" + c.set + "|" + c.number;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(c);
+  });
+  const reps = [];
+  groups.forEach(members => {
+    const ownedMember = members.find(isOwned);
+    reps.push({ card: ownedMember || members[0], owned: !!ownedMember });
+  });
+  currentList = reps.map(r => r.card);
+  const byFam = {};
+  reps.forEach((r, i) => { const fm = family(r.card); (byFam[fm] = byFam[fm] || []).push(i); });
+  $("#countPill").textContent = reps.length + " 张";
+  $("#hint").textContent = "";
+  let html = "";
+  FAM_ORDER.forEach(fam => {
+    const idxs = byFam[fam];
+    if (!idxs || !idxs.length) return;
+    const total = idxs.length;
+    const owned = idxs.filter(i => reps[i].owned).length;
+    const pct = total ? Math.round(owned / total * 100) : 0;
+    html += `<section class="dex-sec">
+      <div class="dex-head"><span class="dex-fam">${fam}</span><span class="dex-prog-txt">已有 ${owned} / ${total}</span></div>
+      <div class="dex-bar"><div class="dex-bar-fill" style="width:${pct}%"></div></div>
+      <div class="dex-row">${idxs.map(i => dexTile(reps[i].card, i)).join("")}</div>
+    </section>`;
+  });
+  resultsEl.innerHTML = html;
+}
 function render() {
+  if (viewMode === 'dex') { renderDex(); return; }
   const { name, number } = parseQuery(searchEl.value);
   clearBtn.style.display = searchEl.value ? 'flex' : 'none';
 
@@ -2184,6 +2271,12 @@ searchEl.addEventListener('input', render);
 document.querySelectorAll('.langbtn').forEach(btn => btn.addEventListener('click', () => {
   activeLang = btn.dataset.lang;
   document.querySelectorAll('.langbtn').forEach(b => b.classList.toggle('active', b === btn));
+  render();
+}));
+document.querySelectorAll('.modebtn').forEach(btn => btn.addEventListener('click', () => {
+  viewMode = btn.dataset.mode;
+  document.querySelectorAll('.modebtn').forEach(b => b.classList.toggle('active', b === btn));
+  document.body.classList.toggle('dex-mode', viewMode === 'dex');
   render();
 }));
 clearBtn.addEventListener('click', () => { searchEl.value = ''; render(); searchEl.focus(); });
