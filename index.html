@@ -35,7 +35,7 @@
     border-bottom: 1px solid var(--border);
   }
   .headwrap { max-width: 1500px; margin: 0 auto; }
-  .title-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .title-row { display: flex; flex-direction: column; align-items: center; gap: 7px; margin-bottom: 14px; }
   .tabs {
     display: flex; gap: 6px; margin-bottom: 10px;
     background: var(--card-bg-2); border: 1px solid var(--border);
@@ -49,7 +49,7 @@
   .tab.active { background: var(--accent); color: #fff; }
   .tab.active.owned-tab { background: var(--green); }
   .tab.active.jp-tab { background: #8b5cf6; color:#fff; }
-  h1 { font-size: 19px; font-weight: 700; letter-spacing: .3px; }
+  h1.apptitle { font-size: clamp(22px, 4.5vw, 30px); font-weight: 800; letter-spacing: .5px; text-align: center; }
   h1 .ball { color: var(--accent); }
   .count-pill {
     font-size: 12px; color: var(--text-dim);
@@ -139,8 +139,8 @@
     font-size: 10px; font-weight: 700; letter-spacing: .3px;
     padding: 2px 6px; border-radius: 5px; color: #fff;
   }
-  .tile-corner.en { background: rgba(21,154,85,.92); }
-  .tile-corner.jp { background: rgba(139,92,246,.92); }
+  .tile-corner.en { background: rgba(150,178,128,.95); }
+  .tile-corner.jp { background: rgba(166,146,190,.95); }
   .tile-holo {
     position: absolute; top: 6px; right: 6px;
     font-size: 10px; font-weight: 700;
@@ -174,14 +174,17 @@
   .badge.qty { background: rgba(21,154,85,.12); color: var(--green); border: 1px solid rgba(21,154,85,.4); }
   .badge.cat { background: rgba(184,134,11,.14); color: var(--gold); border:1px solid rgba(184,134,11,.45); }
   .jpprice{font-size:12.5px;color:var(--green);margin-top:6px;font-weight:600;}
-  .badge.jp { background: rgba(139,92,246,.14); color:#7c3aed; border:1px solid rgba(139,92,246,.45); }
-  .badge.en { background: rgba(21,154,85,.14); color:var(--green); border:1px solid rgba(21,154,85,.45); }
+  .badge.jp { background: rgba(166,146,190,.22); color:#5a4a6e; border:1px solid rgba(166,146,190,.5); }
+  .badge.en { background: rgba(150,178,128,.22); color:#455c33; border:1px solid rgba(150,178,128,.55); }
   .badge.holo { background: linear-gradient(100deg, rgba(180,120,255,.18), rgba(78,140,255,.18), rgba(69,192,200,.18)); color: #7c3aed; border: 1px solid rgba(180,120,255,.5); }
-  .badge.have { background: #16a34a; color: #fff; border: none; font-weight: 700; }
-  .badge.miss { background: #dc2626; color: #fff; border: none; font-weight: 700; }
-  .miniflag.have { background: #16a34a; color: #fff; }
-  .miniflag.miss { background: #dc2626; color: #fff; }
-  .miniflag.holo { background: linear-gradient(100deg, #b478ff, #4e8cff, #45c0c8); color: #fff; }
+  .badge.have { background: #a7bd97; color: #2f3d24; border: none; font-weight: 700; }
+  .badge.miss { background: #d4a59a; color: #5e332c; border: none; font-weight: 700; }
+  .badge.miss-ed { background: #d9c78d; color: #5f4f22; border: none; font-weight: 700; }
+  .miniflag.have { background: #a7bd97; color: #2f3d24; }
+  .miniflag.miss { background: #d4a59a; color: #5e332c; }
+  .miniflag.miss-ed { background: #d9c78d; color: #5f4f22; }
+  .miniflag.holo { background: linear-gradient(100deg, #bcaad4, #a0b7d2, #a9cac6); color: #39354e; }
+  .tile-holo { background: rgba(170,150,196,.92) !important; color: #fff !important; }
   .prices { padding: 0 14px 12px; }
   table.pricetable { width: 100%; border-collapse: collapse; }
   .pricetable th, .pricetable td { text-align: center; padding: 8px 4px; font-size: 14px; border-top: 1px solid var(--border); }
@@ -231,7 +234,7 @@
 <header>
   <div class="headwrap">
   <div class="title-row">
-    <h1><span class="ball">●</span> FMC</h1>
+    <h1 class="apptitle"><span class="ball">●</span> Pokémon Find My Card</h1>
     <span class="count-pill" id="countPill">0 张</span>
   </div>
   <div class="searchbox">
@@ -2030,8 +2033,8 @@ function badgeHtml(c) {
   const dual = !c.jp && !c.promo && !c.no1ed;
   if (dual) {
     const n1 = c.qty1ed || 0, nu = c.qtyUnl || 0;
-    b.push(n1 > 0 ? `<span class="badge have">1ED ×${n1}</span>` : '<span class="badge miss">缺 1ED</span>');
-    b.push(nu > 0 ? `<span class="badge have">UNL ×${nu}</span>` : '<span class="badge miss">缺 UNL</span>');
+    b.push(n1 > 0 ? `<span class="badge have">1ED ×${n1}</span>` : '<span class="badge miss-ed">缺 1ED</span>');
+    b.push(nu > 0 ? `<span class="badge have">UNL ×${nu}</span>` : '<span class="badge miss-ed">缺 UNL</span>');
   } else {
     let n = 0, h = 0;
     if (c.jp) { n = (c.own && c.own.n) || 0; h = (c.own && c.own.h) || 0; }
@@ -2066,8 +2069,8 @@ function tileFlags(c) {
   const dual = !c.jp && !c.promo && !c.no1ed;
   if (dual) {
     const n1 = c.qty1ed || 0, nu = c.qtyUnl || 0;
-    f.push(n1 > 0 ? '<span class="miniflag have">1ED</span>' : '<span class="miniflag miss">缺1ED</span>');
-    f.push(nu > 0 ? '<span class="miniflag have">UNL</span>' : '<span class="miniflag miss">缺UNL</span>');
+    f.push(n1 > 0 ? '<span class="miniflag have">1ED</span>' : '<span class="miniflag miss-ed">缺1ED</span>');
+    f.push(nu > 0 ? '<span class="miniflag have">UNL</span>' : '<span class="miniflag miss-ed">缺UNL</span>');
   } else {
     let n = 0, h = 0;
     if (c.jp) { n = (c.own && c.own.n) || 0; h = (c.own && c.own.h) || 0; }
