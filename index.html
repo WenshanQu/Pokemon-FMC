@@ -2206,12 +2206,7 @@ clearBtn.addEventListener('click', () => { searchEl.value = ''; render(); search
 function cardInfoString(c) {
   const lang = c.jp ? 'JP' : 'ENG';
   const num = c.numDisplay || c.number;
-  let own;
-  if (c.jp) { const n = (c.own && c.own.n) || 0, h = (c.own && c.own.h) || 0; own = (n + h) ? ('普通×' + n + ' 闪×' + h) : '未持有'; }
-  else if (!c.no1ed && !c.promo) { own = '1ED×' + (c.qty1ed || 0) + ' UNL×' + (c.qtyUnl || 0); }
-  else if (c.holo) { own = c.qty ? ('闪×' + c.qty) : '未持有'; }
-  else { own = c.qty ? ('有×' + c.qty) : '未持有'; }
-  return '[FMC] ' + c.name + ' | ' + c.set + ' | #' + num + ' | ' + lang + ' | ' + own;
+  return c.name + ' | ' + c.set + ' | #' + num + ' | ' + lang;
 }
 function copyCard(idx) {
   const c = currentList[idx];
