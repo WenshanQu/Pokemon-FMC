@@ -1,0 +1,12 @@
+{
+  "_comment": "Maps a JPRICE key (see index.html const JPRICE) to its PriceCharting product URL. The weekly GitHub Action (scripts/refresh-prices.mjs) refreshes these prices automatically. Add more lines here to expand coverage — key must match the JPRICE key exactly (set/number, or set/number/name for vintage cards).",
+  "Playmat Promo/79": "https://www.pricecharting.com/game/pokemon-japanese-promo/slowpoke-playmat-79",
+  "Rocket Gang/36": "https://www.pricecharting.com/game/pokemon-japanese-rocket-gang/dark-slowbro-80",
+  "Challenge from the Darkness/48": "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowbro-48",
+  "Neo Destiny/26": "https://www.pricecharting.com/game/pokemon-japanese-darkness-and-to-light/psyduck",
+  "Pokémon VS/058/141/Misty's Quagsire": "https://www.pricecharting.com/game/pokemon-japanese-vs/misty%27s-quagsire-58",
+  "Challenge from the Darkness/44": "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowpoke-79",
+  "Challenge from the Darkness/52": "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-52",
+  "Challenge from the Darkness/52/Giovanni's Meowth": "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-lv-17-52",
+  "Holon Research/022/086/Slowpoke": "https://www.pricecharting.com/game/pokemon-japanese-holon-research/slowpoke-1st-edition-22"
+}
