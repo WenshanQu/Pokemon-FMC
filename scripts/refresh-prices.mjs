@@ -26,8 +26,12 @@ function parsePrices(text) {
     const n = parseFloat(m[1].replace(/,/g, ''));
     return Number.isFinite(n) ? n : null;
   };
-  const raw = grab(/Ungraded[^$]{0,60}\$([0-9][0-9,]*\.?[0-9]*)/i);
-  const psa = grab(/(?:PSA\s*10|Grade\s*10)[^$]{0,60}\$([0-9][0-9,]*\.?[0-9]*)/i);
+  // PriceCharting's price-summary tokens render as the label glued to the price,
+  // e.g. "Ungraded$15.00" / "PSA 10$1,383.75". Require the "$" to sit right next to
+  // the label (0-2 spaces) so we never grab an eBay sold-listing price that merely
+  // contains "PSA 10 ... $50,000" somewhere in its title.
+  const raw = grab(/Ungraded[\s ]{0,2}\$([0-9][0-9,]*\.?[0-9]*)/i);
+  const psa = grab(/PSA[\s ]*10[\s ]{0,2}\$([0-9][0-9,]*\.?[0-9]*)/i);
   return { raw, psa };
 }
 
