@@ -2206,7 +2206,7 @@ clearBtn.addEventListener('click', () => { searchEl.value = ''; render(); search
 function cardInfoString(c) {
   const lang = c.jp ? 'JP' : 'EN';
   const num = c.numDisplay || c.number;
-  return c.name + ' #' + num + ' ' + lang;
+  return c.name + ' #' + num;
 }
 function copyCard(idx) {
   const c = currentList[idx];
