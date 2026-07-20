@@ -220,7 +220,8 @@
     display: flex; align-items: center; justify-content: center;
   }
   #detail .detail-copy { position: absolute; top: 10px; right: 50px; z-index: 2; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,.38); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  #detail .detail-copy.copied { background: #6ea15c; }
+  #detail .detail-copy.copied { background: #6ba05c; transform: scale(1.12); }
+  #detail .detail-copy.copied::after { content: "已复制 ✓"; position: absolute; top: 40px; right: -4px; background: #6ba05c; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 7px; white-space: nowrap; box-shadow: 0 2px 6px rgba(60,80,50,.25); }
   /* image lightbox */
   #lightbox {
     display: none; position: fixed; inset: 0; z-index: 99;
@@ -2203,9 +2204,9 @@ document.querySelectorAll('.langbtn').forEach(btn => btn.addEventListener('click
 clearBtn.addEventListener('click', () => { searchEl.value = ''; render(); searchEl.focus(); });
 
 function cardInfoString(c) {
-  const lang = c.jp ? 'JP' : 'ENG';
+  const lang = c.jp ? 'JP' : 'EN';
   const num = c.numDisplay || c.number;
-  return c.name + ' | ' + c.set + ' | #' + num + ' | ' + lang;
+  return c.name + ' #' + num + ' ' + lang;
 }
 function copyCard(idx) {
   const c = currentList[idx];
