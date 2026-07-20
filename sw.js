@@ -7,7 +7,7 @@ const SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icons/icon-192.png',
+  './icons/pokeball-v2.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png'
 ];
