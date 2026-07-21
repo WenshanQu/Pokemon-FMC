@@ -226,11 +226,15 @@ $arr=$c.Substring($c.IndexOf('const CARDS = ['),$c.IndexOf('];',$c.IndexOf('cons
   — clean transparent PNG.
 - **limitless** card image: `og:image` → `...digitaloceanspaces.com/tpc/<SET>/<SET>_<n>_R_JP_SM.png`
   (small but clean). Great when you only need a catalog thumbnail.
-- **Crop (WPF, trims transparent/black borders to the card face)** — keep the script in scratchpad;
-  the shape is: load via `BitmapDecoder` → `FormatConvertedBitmap`(Bgra32) → scan pixels for
-  `alpha > 20` (bg-removed) to find the bounding box → `CroppedBitmap` → `PngBitmapEncoder`. Output a
-  ~0.71-ratio `..._c.png`. (Full example last used at
-  `scratchpad/crop_delta.ps1` — recreate as needed.)
+- **Crop** to the card face with the committed helper **`scripts/crop-image.ps1`**:
+  ```powershell
+  ./scripts/crop-image.ps1 images/jp_quagsire_delta_pcg9_006.webp
+  #   -> images/jp_quagsire_delta_pcg9_006_c.png   (auto _c.png; or pass a 2nd arg for the dest)
+  ```
+  It auto-detects transparent-bg images (trims by alpha) vs opaque ones (trims the uniform border
+  colour), pads by 2px, and always writes a PNG. Optional: `-Pad`, `-AlphaThreshold`, `-ColorTolerance`.
+  Internally: `BitmapDecoder`(webp/png/jpg) → `FormatConvertedBitmap`(Bgra32) → bounding box →
+  `CroppedBitmap` → `PngBitmapEncoder`. A snkrdunk 856×625 crops to ~0.71 ratio.
 - If a filename you replaced keeps showing a stale image in the app, bump `CACHE` in `sw.js`
   (`fmc-v2`→`fmc-v3`) to force clients to drop cached images.
 
