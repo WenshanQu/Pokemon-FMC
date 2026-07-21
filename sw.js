@@ -2,7 +2,7 @@
 // - App shell precached on install (opens offline).
 // - HTML: network-first (so pushed updates show up when online; cached copy offline).
 // - Images/assets: cache-first (fast + offline once fetched or precached via the 离线缓存 button).
-const CACHE = 'fmc-v1';
+const CACHE = 'fmc-v2';
 const SHELL = [
   './',
   './index.html',
