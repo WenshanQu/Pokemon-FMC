@@ -106,7 +106,7 @@ const CARDS = [
     prices: { ed1: { rawUSD: 2.73, rawSGD: 3.53, psaUSD: 72.16, psaSGD: 93.23 },
               unl: { rawUSD: 2.24, rawSGD: 2.89, psaUSD: 49.99, psaSGD: 64.59 } },
     priceDate: "2026-07-18", fx: 1.292 },
-  { name: "Misty's Psyduck", number: 54, total: 132, set: "Gym Heroes",
+  { art: "pm54", name: "Misty's Psyduck", number: 54, total: 132, set: "Gym Heroes",
     missing: "BOTH",
     img: "images/2cbc9a17a9648a3d.png",
     prices: { ed1: { rawUSD: 25.00, rawSGD: 32.30, psaUSD: 582.50, psaSGD: 753 },
@@ -1699,7 +1699,7 @@ const CARDS = [
   { art: "m122", name: "Meowth ex", number: 61, set: "Nihil Zero", jp: true, img: "images/jp_meowth_ex_m3_61.png", own: { n: 1, h: 0 } },
   { art: "m117", name: "Team Rocket's Meowth", number: 259, set: "SV-P Promo", jp: true, img: "images/jp_tr_meowth_svp_259.png", own: { n: 1, h: 0 } },
   { name: "Pokepark's Torchic", number: 47, set: "PCG-P Promo", jp: true, img: "images/jp_pokepark_torchic_47.jpg", own: { n: 1, h: 0 } },
-  { name: "Slowking", number: 87, numDisplay: "DPBP#087", set: "Moonlit Pursuit", jp: true, img: "images/jp_slowking_dpbp087.png", own: { n: 1, h: 0 } },
+  { art: "z31", name: "Slowking", number: 87, numDisplay: "DPBP#087", set: "Moonlit Pursuit", jp: true, img: "images/jp_slowking_dpbp087.png", own: { n: 1, h: 0 } },
   { art: "z37", name: "Slowpoke", number: 85, numDisplay: "DPBP#085", set: "Moonlit Pursuit", jp: true, img: "images/jp_slowpoke_dpbp085.png", own: { n: 1, h: 0 } },
   { art: "s139", name: "Slowpoke", number: 17, set: "HeartGold Collection", jp: true, img: "images/jp_slowpoke_hgss_17.png", own: { n: 1, h: 0 } },
   { art: "s149", name: "Slowpoke", number: 16, set: "Dark Rush", jp: true, img: "images/jp_slowpoke_darkrush_16.png", own: { n: 1, h: 0 } },
@@ -1712,7 +1712,7 @@ const CARDS = [
   { art: "s14", name: "Sabrina's Slowpoke", number: 44, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowpoke-79", img: "images/jp_sabrina_slowpoke_44.png", own: { n: 0, h: 0 } },
   { art: "m15", name: "Giovanni's Meowth", number: 52, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-52", img: "images/jp_giovanni_meowth_52.jpg", own: { n: 0, h: 0 } },
   { art: "m16", name: "Giovanni's Meowth", number: 52, numDisplay: "52 (Lv.17)", set: "Challenge from the Darkness", jp: true, vintage: true, rar: "R", pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-lv-17-52", img: "images/jp_giovanni_meowth_lv17_52.jpg", own: { n: 0, h: 0 } },
-  { art: "mPOP5", name: "Meowth δ", number: 127, numDisplay: "PCG-P #127", set: "PCG-P Promo", jp: true, promo: true, img: "images/ab44679d8a90a749.png", own: { n: 1, h: 0 } },{ art: "p193", name: "Misty's Psyduck", number: "071/063", numDisplay: "071/063 AR", set: "SV9a", jp: true, img: "images/cba0247f08a7a711.png", own: { n: 0, h: 0 } },];
+  { art: "mPOP5", name: "Meowth δ", number: 127, numDisplay: "PCG-P #127", set: "PCG-P Promo", jp: true, promo: true, img: "images/ab44679d8a90a749.png", own: { n: 1, h: 0 } },{ art: "p193", name: "Misty's Psyduck", number: "071/063", numDisplay: "071/063 AR", set: "SV9a", jp: true, img: "images/cba0247f08a7a711.png", own: { n: 0, h: 0 } },{ art: "pm54", name: "Misty's Psyduck", number: "054", numDisplay: "No. 054", set: "Hanada City Gym", jp: true, img: "images/2cbc9a17a9648a3d.png", own: { n: 0, h: 0 } },];
 const FAM_ORDER=['Meowth','Psyduck','Slowpoke','Slowbro','Slowking','Quagsire','其他'];
 function family(c){const n=c.name;if(/Quagsire/i.test(n))return'Quagsire';if(/Slowking/i.test(n))return'Slowking';if(/Slowbro/i.test(n))return'Slowbro';if(/Slowpoke/i.test(n))return'Slowpoke';if(/Psyduck/i.test(n))return'Psyduck';if(/Meowth/i.test(n))return'Meowth';return'其他';}
 const root=document.getElementById('root');
