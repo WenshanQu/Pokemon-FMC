@@ -790,7 +790,7 @@ const CARDS = [
     img: "images/dc1b6f0f31b36eee.png",
     prices: { ed1: null, unl: { rawUSD: 3.07, rawSGD: 3.97, psaUSD: 51.54, psaSGD: 67 } },
     priceDate: "2026-07-18", fx: 1.292 },
-  { name: "Slowbro", number: 90, numDisplay: "090", total: 84, set: "Pitch Black",
+  { art: "b90", name: "Slowbro", number: 90, numDisplay: "090", total: 84, set: "Pitch Black",
     missing: "UNL", no1ed: true,
     img: "images/1c194bd8b0530647.png",
     prices: { ed1: null, unl: { rawUSD: 34.67, rawSGD: 44.79, psaUSD: 205.08, psaSGD: 265 } },
@@ -1190,7 +1190,7 @@ const CARDS = [
     img: "images/2cc05d523b8f41b5.png",
     prices: { ed1: null, unl: { rawUSD: 306.63, rawSGD: 396.17, psaUSD: null, psaSGD: null } },
     priceDate: "2026-07-18", fx: 1.292 },
-  { name: "Slowpoke & Psyduck-GX", number: 239, total: 236, set: "Unified Minds",
+  { art: "sp239", name: "Slowpoke & Psyduck-GX", number: 239, total: 236, set: "Unified Minds",
     missing: "UNL", no1ed: true,
     img: "images/14b0d1e771b074d9.png",
     prices: { ed1: null, unl: { rawUSD: 145.00, rawSGD: 187.34, psaUSD: 775.97, psaSGD: 1003 } },
@@ -1712,7 +1712,7 @@ const CARDS = [
   { art: "s14", name: "Sabrina's Slowpoke", number: 44, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowpoke-79", img: "images/jp_sabrina_slowpoke_44.png", own: { n: 0, h: 0 } },
   { art: "m15", name: "Giovanni's Meowth", number: 52, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-52", img: "images/jp_giovanni_meowth_52.jpg", own: { n: 0, h: 0 } },
   { art: "m16", name: "Giovanni's Meowth", number: 52, numDisplay: "52 (Lv.17)", set: "Challenge from the Darkness", jp: true, vintage: true, rar: "R", pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-lv-17-52", img: "images/jp_giovanni_meowth_lv17_52.jpg", own: { n: 0, h: 0 } },
-  { art: "mPOP5", name: "Meowth δ", number: 127, numDisplay: "PCG-P #127", set: "PCG-P Promo", jp: true, promo: true, img: "images/ab44679d8a90a749.png", own: { n: 1, h: 0 } },{ art: "p193", name: "Misty's Psyduck", number: "071/063", numDisplay: "071/063 AR", set: "SV9a", jp: true, img: "images/cba0247f08a7a711.png", own: { n: 0, h: 0 } },{ art: "pm54", name: "Misty's Psyduck", number: "054", numDisplay: "No. 054", set: "Hanada City Gym", jp: true, img: "images/2cbc9a17a9648a3d.png", own: { n: 0, h: 0 } },];
+  { art: "mPOP5", name: "Meowth δ", number: 127, numDisplay: "PCG-P #127", set: "PCG-P Promo", jp: true, promo: true, img: "images/ab44679d8a90a749.png", own: { n: 1, h: 0 } },{ art: "p193", name: "Misty's Psyduck", number: "071/063", numDisplay: "071/063 AR", set: "SV9a", jp: true, img: "images/cba0247f08a7a711.png", own: { n: 0, h: 0 } },{ art: "pm54", name: "Misty's Psyduck", number: "054", numDisplay: "No. 054", set: "Hanada City Gym", jp: true, img: "images/2cbc9a17a9648a3d.png", own: { n: 0, h: 0 } },{ art: "sp239", name: "Slowpoke & Psyduck-GX", number: "107/094", numDisplay: "107/094 HR", set: "SM11", jp: true, img: "images/14b0d1e771b074d9.png", own: { n: 0, h: 0 } },{ art: "b90", name: "Slowbro", number: "087/081", numDisplay: "087/081 AR", set: "Abyss Eye", jp: true, img: "images/1c194bd8b0530647.png", own: { n: 0, h: 0 } },];
 const FAM_ORDER=['Meowth','Psyduck','Slowpoke','Slowbro','Slowking','Quagsire','其他'];
 function family(c){const n=c.name;if(/Quagsire/i.test(n))return'Quagsire';if(/Slowking/i.test(n))return'Slowking';if(/Slowbro/i.test(n))return'Slowbro';if(/Slowpoke/i.test(n))return'Slowpoke';if(/Psyduck/i.test(n))return'Psyduck';if(/Meowth/i.test(n))return'Meowth';return'其他';}
 const root=document.getElementById('root');
