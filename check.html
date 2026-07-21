@@ -31,7 +31,7 @@
 </style></head><body>
 <div class="bar">
   <h1>画作核对工具 · 共 <span id="cnt"></span> 张</h1>
-  <div class="tip">看图判断：<b>同一张画作</b>的卡，在输入框里填<b>相同的记号</b>（比如都填该组里最小的编号，或 A、B…随你）。<b style="color:#6ba05c">绿色=已合并</b>（上一轮已确认，可跳过）；若发现某张未合并卡跟已有组同款，就填那张绿卡上显示的组号（如 <code>m27</code>）。留空=暂不处理。改动自动保存。标完点「导出标注」发我。</div>
+  <div class="tip">看图判断：<b>同一张画作</b>的卡，在输入框里填<b>相同的记号</b>（比如都填该组里最小的编号，或 A、B…随你）。每个已归类的画作<b style="color:#6ba05c">只显示 1 张代表（绿色，标 组号如 m27）</b>，同组其余的已隐藏；<b>若发现某张待处理卡跟某个绿色代表同款</b>，在它输入框里填那个组号即可并入。留空=暂不处理。改动自动保存。标完点「导出标注」发我。</div>
   <button onclick="exp()">导出标注</button>
   <button class="ghost" onclick="tgl()" id="tglbtn">隐藏已合并</button>
   <button class="ghost" onclick="clr()">清空全部</button>
@@ -556,7 +556,7 @@ const CARDS = [
     prices: { ed1: null,
               unl: { rawUSD: 255.27, rawSGD: 330, psaUSD: 7975.00, psaSGD: 10304 } },
     priceDate: "2026-07-18", fx: 1.292 },
-  { name: "Meowth", number: 11, total: 17, set: "POP Series 5",
+  { art: "mPOP5", name: "Meowth", number: 11, total: 17, set: "POP Series 5",
     missing: "UNL", promo: true,
     img: "images/ab44679d8a90a749.png",
     prices: { ed1: null,
@@ -1506,16 +1506,16 @@ const CARDS = [
   { name: "Meowth", number: "375", set: "SMP", jp: true, img: "images/b8a4c5abdd3a1a7c.png", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "44", set: "XY11r", jp: true, img: "images/a05e766345a69396.png", own: { n: 0, h: 0 } },
   { art: "m357", name: "Meowth", number: "9", set: "XYH", jp: true, img: "images/148dfbb5178a47d7.png", own: { n: 0, h: 0 } },
-  { name: "Meowth", number: "42", set: "20th", jp: true, img: "images/ff16397bc837a8a9.png", own: { n: 0, h: 0 } },
-  { name: "Meowth", number: "22", set: "CP2", jp: true, img: "images/0f476eafd9d720d2.png", own: { n: 0, h: 0 } },
-  { name: "Meowth", number: "61", set: "XY7", jp: true, img: "images/e3103ecb3f97dc99.png", own: { n: 1, h: 0 } },
+  { art: "m349", name: "Meowth", number: "42", set: "20th", jp: true, img: "images/ff16397bc837a8a9.png", own: { n: 0, h: 0 } },
+  { art: "m349", name: "Meowth", number: "22", set: "CP2", jp: true, img: "images/0f476eafd9d720d2.png", own: { n: 0, h: 0 } },
+  { art: "m351", name: "Meowth", number: "61", set: "XY7", jp: true, img: "images/e3103ecb3f97dc99.png", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "106", set: "XYP", jp: true, img: "images/5c74140059454837.png", own: { n: 2, h: 0 } },
-  { name: "Meowth", number: "250", set: "XYP", jp: true, img: "images/c7bfafea9342b2b5.png", own: { n: 1, h: 0 } },
+  { art: "m351", name: "Meowth", number: "250", set: "XYP", jp: true, img: "images/c7bfafea9342b2b5.png", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "25", set: "HSZ", jp: true, img: "images/db58fcfd8300d156.png", own: { n: 1, h: 0 } },
   { art: "m148", name: "Meowth", number: "45", set: "BW3p", jp: true, img: "images/f952070e997ab1ea.png", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "72", set: "BW2", jp: true, img: "images/0fa7fa4b78c8e722.png", own: { n: 0, h: 0 } },
-  { name: "Meowth", number: "105", set: "BWP", jp: true, img: "images/52e948462900cc6b.png", own: { n: 3, h: 0 } },
-  { name: "Meowth", number: "204", set: "BWP", jp: true, img: "images/dc95fe1a94034ab8.png", own: { n: 1, h: 0 } },
+  { art: "m358", name: "Meowth", number: "105", set: "BWP", jp: true, img: "images/52e948462900cc6b.png", own: { n: 3, h: 0 } },
+  { art: "m358", name: "Meowth", number: "204", set: "BWP", jp: true, img: "images/dc95fe1a94034ab8.png", own: { n: 1, h: 0 } },
   { name: "Quagsire", number: "122", set: "SVP", jp: true, img: "images/3b632b8d03987ecb.png", own: { n: 10, h: 0 } },
   { name: "Quagsire", number: "35", set: "S3a", jp: true, img: "images/3c6fb1795f5d78cc.png", own: { n: 1, h: 0 } },
   { name: "Quagsire", number: "311", set: "SP", jp: true, img: "images/268d296e714adbb3.png", own: { n: 8, h: 0 } },
@@ -1570,9 +1570,9 @@ const CARDS = [
   { name: "Dark Slowking", number: "199", set: "Neo Destiny", jp: true, vintage: true, rar: "—", img: "images/683b6e6d9c86690a.jpg", own: { n: 0, h: 0 } },
   { name: "Dark Slowking", number: "044/084", set: "EX TR Returns", jp: true, vintage: true, rar: "Holo", img: "images/61887ac40b796537.jpg", own: { n: 0, h: 0 } },
   { name: "Will's Slowking", number: "077/141", set: "Pokémon VS", jp: true, vintage: true, rar: "C", img: "images/be67b7af7dcbfb42.jpg", own: { n: 1, h: 0 } },
-  { name: "Meowth", number: "052", set: "Jungle", jp: true, vintage: true, rar: "C", img: "images/842fb03aad2dba14.jpg", own: { n: 0, h: 0 } },
+  { art: "m413", name: "Meowth", number: "052", set: "Jungle", jp: true, vintage: true, rar: "C", img: "images/842fb03aad2dba14.jpg", own: { n: 0, h: 0 } },
   { name: "Meowth", number: "029/128", set: "Expedition", jp: true, vintage: true, rar: "C", img: "images/7f9123c7c5d6a07a.jpg", own: { n: 1, h: 0 } },
-  { name: "Meowth", number: "062/088", set: "Skyridge", jp: true, vintage: true, rar: "C", img: "images/59a65a44419a1ba7.jpg", own: { n: 1, h: 0 } },
+  { art: "m45", name: "Meowth", number: "062/088", set: "Skyridge", jp: true, vintage: true, rar: "C", img: "images/59a65a44419a1ba7.jpg", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "059/086", set: "EX Delta Species", jp: true, vintage: true, rar: "C", img: "images/4ff36d972740460e.jpg", own: { n: 0, h: 0 } },
   { art: "m439", name: "Meowth", number: "038/052", set: "EX Holon Phantoms", jp: true, vintage: true, rar: "C", img: "images/2c0bdd3a398fd9ad.jpg", own: { n: 2, h: 0 } },
   { name: "Meowth", number: "057", set: "Legends Awakened", jp: true, vintage: true, rar: "C", img: "images/f6ecf04148c9fa15.jpg", own: { n: 1, h: 0 } },
@@ -1585,7 +1585,7 @@ const CARDS = [
   { name: "Quagsire", number: "006/068", set: "EX Dragon Frontiers", jp: true, vintage: true, rar: "R", img: "images/478653145b5d7b72.png", own: { n: 1, h: 0 } },
   { name: "Quagsire", number: "224", set: "Secret Wonders", jp: true, vintage: true, rar: "U", img: "images/e2c916b87903d8c0.jpg", own: { n: 1, h: 0 } },
   { name: "Quagsire", number: "027/070", set: "HeartGold SoulSilver", jp: true, vintage: true, rar: "Holo", img: "images/2b7b2ce981f50d56.jpg", own: { n: 7, h: 1 } },
-  { name: "Meowth", number: 56, total: null, set: "Jungle",
+  { art: "m413", name: "Meowth", number: 56, total: null, set: "Jungle",
     missing: "UNL", no1ed: true, catalog: true,
     img: "images/d3e592f010114745.png",
     prices: { ed1: null, unl: { rawUSD: 1.76, rawSGD: 2.27, psaUSD: 172.74, psaSGD: 223 } },
@@ -1727,7 +1727,8 @@ const CARDS = [
   { name: "Psyduck", number: 26, set: "Neo Destiny", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-darkness-and-to-light/psyduck", img: "images/jp_psyduck_neo_26.png", own: { n: 1, h: 0 } },  { name: "Misty's Quagsire", number: "058/141", set: "Pokémon VS", jp: true, vintage: true, rar: "C", pc: "https://www.pricecharting.com/game/pokemon-japanese-vs/misty%27s-quagsire-58", img: "images/jp_misty_quagsire_58.jpg", own: { n: 0, h: 0 } },
   { name: "Sabrina's Slowpoke", number: 44, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowpoke-79", img: "images/jp_sabrina_slowpoke_44.png", own: { n: 0, h: 0 } },
   { art: "m15", name: "Giovanni's Meowth", number: 52, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-52", img: "images/jp_giovanni_meowth_52.jpg", own: { n: 0, h: 0 } },
-  { art: "m16", name: "Giovanni's Meowth", number: 52, numDisplay: "52 (Lv.17)", set: "Challenge from the Darkness", jp: true, vintage: true, rar: "R", pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-lv-17-52", img: "images/jp_giovanni_meowth_lv17_52.jpg", own: { n: 0, h: 0 } },];
+  { art: "m16", name: "Giovanni's Meowth", number: 52, numDisplay: "52 (Lv.17)", set: "Challenge from the Darkness", jp: true, vintage: true, rar: "R", pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-lv-17-52", img: "images/jp_giovanni_meowth_lv17_52.jpg", own: { n: 0, h: 0 } },
+  { art: "mPOP5", name: "Meowth δ", number: 127, numDisplay: "PCG-P #127", set: "PCG-P Promo", jp: true, promo: true, img: "images/ab44679d8a90a749.png", own: { n: 1, h: 0 } },];
 const FAM_ORDER=['Meowth','Psyduck','Slowpoke','Slowbro','Slowking','Quagsire','其他'];
 function family(c){const n=c.name;if(/Quagsire/i.test(n))return'Quagsire';if(/Slowking/i.test(n))return'Slowking';if(/Slowbro/i.test(n))return'Slowbro';if(/Slowpoke/i.test(n))return'Slowpoke';if(/Psyduck/i.test(n))return'Psyduck';if(/Meowth/i.test(n))return'Meowth';return'其他';}
 const root=document.getElementById('root');
@@ -1738,33 +1739,36 @@ const byFam={};
 CARDS.forEach((c,i)=>{const f=family(c);(byFam[f]=byFam[f]||[]).push(i);});
 FAM_ORDER.forEach(fam=>{
   const idxs=byFam[fam]; if(!idxs||!idxs.length)return;
-  // unmerged first, then merged grouped by art id
-  idxs.sort((a,b)=>{
-    const ca=CARDS[a], cb=CARDS[b];
-    const ma=ca.art?1:0, mb=cb.art?1:0;
-    if(ma!==mb) return ma-mb;
-    if(ma&&ca.art!==cb.art) return ca.art<cb.art?-1:1;
-    return a-b;
+  // collapse each art group to ONE representative (member with an image, else first); unmerged cards stay individual
+  const unmerged=[], artMembers={};
+  idxs.forEach(i=>{const c=CARDS[i]; if(c.art){(artMembers[c.art]=artMembers[c.art]||[]).push(i);} else unmerged.push(i);});
+  const reps=Object.keys(artMembers).sort().map(a=>{
+    const mem=artMembers[a]; let rep=mem[0];
+    for(const i of mem){ if(CARDS[i].img){rep=i;break;} }
+    return {i:rep, art:a, cnt:mem.length};
   });
-  const todo=idxs.filter(i=>!CARDS[i].art).length;
+  unmerged.sort((a,b)=>a-b);
+  const distinct=unmerged.length+reps.length;
   const sec=document.createElement('section');
-  if(todo===0) sec.className='allmerged';
+  if(unmerged.length===0) sec.className='allmerged';
   const h=document.createElement('h2'); h.className='fam';
-  h.innerHTML=fam+' <span class="fc">'+idxs.length+' 张 · '+(todo?('<b style="color:#c07a2b">'+todo+' 待处理</b>'):'<b style="color:#6ba05c">已全部合并</b>')+'</span>';
+  h.innerHTML=fam+' <span class="fc">'+distinct+' 画作 · '+(unmerged.length?('<b style="color:#c07a2b">'+unmerged.length+' 待处理</b>'):'<b style="color:#6ba05c">已全部归类</b>')+'</span>';
   const g=document.createElement('div'); g.className='grid';
-  idxs.forEach(i=>{
+  const mk=(i,art,cnt)=>{
     const c=CARDS[i], n=i+1;
     const img=c.img?('<img src="'+c.img+'" loading="lazy" onerror="this.parentNode.innerHTML=\'<div class=noimg>图待补</div>\'">'):'<div class="noimg">图待补</div>';
     const lang=c.jp?'JP':'EN'; const v=(saved[n]||'');
-    const el=document.createElement('div'); el.className='card'+(c.art?' merged':'');
-    const bottom=c.art
-      ?('<div class="artbadge">✓ 已合并 · '+c.art+'</div>')
+    const el=document.createElement('div'); el.className='card'+(art?' merged':'');
+    const bottom=art
+      ?('<div class="artbadge">组 '+art+(cnt>1?(' · '+cnt+'张'):'')+'</div>')
       :('<input data-i="'+n+'" placeholder="记号" value="'+v.replace(/"/g,'&quot;')+'">');
-    el.innerHTML='<div class="num'+(c.art?' mnum':'')+'">'+n+'</div><div class="imgwrap">'+img+'</div>'
+    el.innerHTML='<div class="num'+(art?' mnum':'')+'">'+n+'</div><div class="imgwrap">'+img+'</div>'
       +'<div class="meta"><b>'+c.name+'</b><br><span class="dim">'+c.set+' · #'+(c.numDisplay||c.number)+' · '+lang+'</span></div>'
       +bottom;
     g.appendChild(el);
-  });
+  };
+  unmerged.forEach(i=>mk(i,null,0));
+  reps.forEach(r=>mk(r.i,r.art,r.cnt));
   sec.appendChild(h); sec.appendChild(g); root.appendChild(sec);
 });
 function refl(inp){inp.classList.toggle('filled',!!inp.value.trim());}
