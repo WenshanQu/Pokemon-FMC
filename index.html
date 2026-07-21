@@ -282,6 +282,8 @@
   .gown { font-size: 10.5px; font-weight: 700; margin-top: 8px; padding: 3.5px 4px; border-radius: 7px; }
   .gown-y { color: #43723a; background: #e8f4e2; }
   .gown-n { color: #a4aab0; background: #f0f1f2; }
+  .gpc { display: block; text-align: center; margin-top: 7px; padding: 5px 4px; border-radius: 7px; background: #eef2f5; color: #5f8fa8; font-size: 10.5px; font-weight: 700; text-decoration: none; }
+  .gpc:active { opacity: .78; }
   /* image lightbox */
   #lightbox {
     display: none; position: fixed; inset: 0; z-index: 99;
@@ -2365,6 +2367,7 @@ function groupDetailHtml(rep, members) {
       <div class="gset">${c.set}</div>
       <div class="gnum">#${c.numDisplay || c.number}${c.total ? '/' + c.total : ''}</div>
       <div class="gown ${owned ? 'gown-y' : 'gown-n'}">${oi.label}</div>
+      <a class="gpc" href="${pcUrl(c)}" target="_blank" rel="noopener noreferrer">实时价 ↗</a>
     </div>`;
   }).join('');
   return `<div class="gdetail">
