@@ -257,6 +257,27 @@
   #detail .detail-copy { position: absolute; top: 10px; right: 50px; z-index: 2; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,.38); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   #detail .detail-copy.copied { background: #6ba05c; transform: scale(1.12); }
   #detail .detail-copy.copied::after { content: "已复制 ✓"; position: absolute; top: 40px; right: -4px; background: #6ba05c; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 7px; white-space: nowrap; box-shadow: 0 2px 6px rgba(60,80,50,.25); }
+  #detail .detail-inner.wide { max-width: 640px; }
+  /* ===== dex art-group detail ===== */
+  .gdetail { background: var(--bg); border-radius: var(--radius); padding: 22px 16px 26px; }
+  .gdetail-head { text-align: center; padding: 0 34px; }
+  .gdetail-title { font-size: 21px; font-weight: 800; color: var(--text); letter-spacing: .2px; }
+  .gdetail-sub { display: inline-block; font-size: 12px; color: var(--text-dim); margin-top: 7px; padding: 4px 12px; background: var(--card-bg-2); border-radius: 99px; }
+  .gdetail-sub b { color: var(--accent); }
+  .gdetail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 13px; margin-top: 20px; }
+  .gcard { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px 8px 10px; text-align: center; box-shadow: 0 1px 2px rgba(30,40,60,.04); }
+  .gcard.gmiss { opacity: .58; }
+  .gimg-wrap { position: relative; aspect-ratio: 63 / 88; border-radius: 8px; overflow: hidden; background: var(--card-bg-2); }
+  .gimg-wrap img { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
+  .gnoimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #9aa1b2; }
+  .glang { position: absolute; top: 5px; left: 5px; font-size: 9.5px; font-weight: 800; color: #fff; padding: 1.5px 6px; border-radius: 6px; letter-spacing: .3px; box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+  .glang.en { background: rgba(95,143,168,.96); }
+  .glang.jp { background: rgba(149,120,172,.96); }
+  .gset { font-size: 11.5px; font-weight: 700; color: var(--text); margin-top: 8px; line-height: 1.25; word-break: break-word; }
+  .gnum { font-size: 10.5px; color: var(--text-dim); margin-top: 2px; }
+  .gown { font-size: 10.5px; font-weight: 700; margin-top: 8px; padding: 3.5px 4px; border-radius: 7px; }
+  .gown-y { color: #43723a; background: #e8f4e2; }
+  .gown-n { color: #a4aab0; background: #f0f1f2; }
   /* image lightbox */
   #lightbox {
     display: none; position: fixed; inset: 0; z-index: 99;
@@ -2006,6 +2027,7 @@ let activeSet = null;
 let activeTab = 'need';
 let activeLang = 'all';
 let currentList = [];
+let currentGroups = [];
 let viewMode = 'dex';
 const ownedCount = c => (c.qty1ed || 0) + (c.qtyUnl || 0) + (c.qty || 0);
 const jpOwned = c => (c.own ? (c.own.n || 0) + (c.own.h || 0) : 0);
@@ -2212,12 +2234,15 @@ function renderDex() {
     groups.get(k).push(c);
   });
   const reps = [];
+  const repGroups = [];
   groups.forEach(members => {
     const ownedMember = members.find(isOwned);
     const rep = ownedMember || members.find(m => m.img) || members[0];
     reps.push({ card: rep, owned: !!ownedMember });
+    repGroups.push(members);
   });
   currentList = reps.map(r => r.card);
+  currentGroups = repGroups;
   const byFam = {};
   reps.forEach((r, i) => { const fm = family(r.card); (byFam[fm] = byFam[fm] || []).push(i); });
   $("#countPill").textContent = reps.length + " 张";
@@ -2304,11 +2329,55 @@ function copyCard(idx) {
   const btn = document.querySelector('.detail-copy');
   if (btn) { btn.classList.add('copied'); setTimeout(function () { btn.classList.remove('copied'); }, 1300); }
 }
+function ownInfo(c) {
+  if (c.jp) {
+    const n = (c.own && c.own.n) || 0, h = (c.own && c.own.h) || 0, t = n + h;
+    const p = []; if (n) p.push('普通×' + n); if (h) p.push('闪×' + h);
+    return { total: t, label: t ? p.join(' · ') : '未持有' };
+  }
+  if (c.no1ed || c.promo) { const q = c.qty || 0; return { total: q, label: q ? '持有 ×' + q : '未持有' }; }
+  const a = c.qty1ed || 0, b = c.qtyUnl || 0, t = a + b;
+  const p = []; if (a) p.push('1ED×' + a); if (b) p.push('无印×' + b);
+  return { total: t, label: t ? p.join(' · ') : '未持有' };
+}
+function groupDetailHtml(rep, members) {
+  const list = members.slice().sort((x, y) =>
+    (x.jp ? 1 : 0) - (y.jp ? 1 : 0) || String(x.set).localeCompare(String(y.set)) || (parseInt(x.number) || 0) - (parseInt(y.number) || 0));
+  const ownedCount = list.filter(isOwned).length;
+  const cells = list.map(c => {
+    const oi = ownInfo(c);
+    const owned = oi.total > 0;
+    const img = c.img
+      ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onclick="showLightbox(this.src)" onerror="this.parentNode.innerHTML='<div class=gnoimg>图待补</div>'">`
+      : `<div class="gnoimg">图待补</div>`;
+    return `<div class="gcard ${owned ? '' : 'gmiss'}">
+      <div class="gimg-wrap">${img}<span class="glang ${c.jp ? 'jp' : 'en'}">${c.jp ? 'JP' : 'ENG'}</span></div>
+      <div class="gset">${c.set}</div>
+      <div class="gnum">#${c.numDisplay || c.number}${c.total ? '/' + c.total : ''}</div>
+      <div class="gown ${owned ? 'gown-y' : 'gown-n'}">${oi.label}</div>
+    </div>`;
+  }).join('');
+  return `<div class="gdetail">
+    <div class="gdetail-head">
+      <div class="gdetail-title">${rep.name}</div>
+      <div class="gdetail-sub">同一画作 · ${list.length} 个版本 · 持有 <b>${ownedCount}/${list.length}</b></div>
+    </div>
+    <div class="gdetail-grid">${cells}</div>
+  </div>`;
+}
 function openDetail(idx) {
   const c = currentList[idx];
   if (!c) return;
-  $('#detail .detail-inner').innerHTML =
-    '<button class="detail-close" onclick="closeDetail()">✕</button>' + '<button class="detail-copy" onclick="copyCard(' + idx + ')" title="复制卡片信息"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>' + cardHtml(c);
+  const inner = $('#detail .detail-inner');
+  if (viewMode === 'dex') {
+    const members = c.art ? CARDS.filter(x => x.art === c.art) : (currentGroups[idx] || [c]);
+    inner.classList.add('wide');
+    inner.innerHTML = '<button class="detail-close" onclick="closeDetail()">✕</button>' + groupDetailHtml(c, members);
+  } else {
+    inner.classList.remove('wide');
+    inner.innerHTML =
+      '<button class="detail-close" onclick="closeDetail()">✕</button>' + '<button class="detail-copy" onclick="copyCard(' + idx + ')" title="复制卡片信息"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>' + cardHtml(c);
+  }
   $('#detail').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
