@@ -23,11 +23,17 @@
   .dim{color:#6b7280;}
   input{width:100%;padding:6px 8px;border:1px solid #cfd4d9;border-radius:6px;font-size:13px;}
   input.filled{border-color:#5d6b78;background:#eef1f3;}
+  .card.merged{background:#eef6ec;border-color:#c2ddbd;opacity:.66;}
+  .num.mnum{background:#6ba05c;}
+  .artbadge{width:100%;padding:6px 8px;border-radius:6px;font-size:12px;font-weight:700;text-align:center;background:#6ba05c;color:#fff;}
+  body.hide-merged .card.merged{display:none;}
+  body.hide-merged section.allmerged{display:none;}
 </style></head><body>
 <div class="bar">
   <h1>画作核对工具 · 共 <span id="cnt"></span> 张</h1>
-  <div class="tip">看图判断：<b>同一张画作</b>的卡，在输入框里填<b>相同的记号</b>（比如都填该组里最小的编号，或 A、B…随你）。留空=暂不处理。改动自动保存。标完点「导出标注」把结果发给我。</div>
+  <div class="tip">看图判断：<b>同一张画作</b>的卡，在输入框里填<b>相同的记号</b>（比如都填该组里最小的编号，或 A、B…随你）。<b style="color:#6ba05c">绿色=已合并</b>（上一轮已确认，可跳过）；若发现某张未合并卡跟已有组同款，就填那张绿卡上显示的组号（如 <code>m27</code>）。留空=暂不处理。改动自动保存。标完点「导出标注」发我。</div>
   <button onclick="exp()">导出标注</button>
+  <button class="ghost" onclick="tgl()" id="tglbtn">隐藏已合并</button>
   <button class="ghost" onclick="clr()">清空全部</button>
   <div id="out"></div>
 </div>
@@ -1094,7 +1100,7 @@ const CARDS = [
     img: "images/545bc46ef034c299.png",
     prices: { ed1: null, unl: { rawUSD: 4.24, rawSGD: 5.48, psaUSD: 48.36, psaSGD: 62.48 } },
     priceDate: "2026-07-18", fx: 1.292 },
-  { art: "m192", name: "Slowpoke", number: 54, total: 214, set: "Lost Thunder",
+  { name: "Slowpoke", number: 54, total: 214, set: "Lost Thunder",
     missing: "UNL", no1ed: true, holo: true,
     img: "images/545bc46ef034c299.png",
     prices: { ed1: null, unl: { rawUSD: 21, rawSGD: 27.13, psaUSD: 131.48, psaSGD: 169.87 } },
@@ -1569,7 +1575,7 @@ const CARDS = [
   { name: "Meowth", number: "062/088", set: "Skyridge", jp: true, vintage: true, rar: "C", img: "images/59a65a44419a1ba7.jpg", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "059/086", set: "EX Delta Species", jp: true, vintage: true, rar: "C", img: "images/4ff36d972740460e.jpg", own: { n: 0, h: 0 } },
   { art: "m439", name: "Meowth", number: "038/052", set: "EX Holon Phantoms", jp: true, vintage: true, rar: "C", img: "images/2c0bdd3a398fd9ad.jpg", own: { n: 2, h: 0 } },
-  { art: "m192", name: "Meowth", number: "057", set: "Legends Awakened", jp: true, vintage: true, rar: "C", img: "images/f6ecf04148c9fa15.jpg", own: { n: 1, h: 0 } },
+  { name: "Meowth", number: "057", set: "Legends Awakened", jp: true, vintage: true, rar: "C", img: "images/f6ecf04148c9fa15.jpg", own: { n: 1, h: 0 } },
   { name: "Meowth", number: "053/070", set: "HeartGold SoulSilver", jp: true, vintage: true, rar: "C", img: "images/0aa8943a0fbd010d.jpg", own: { n: 2, h: 2 } },
   { name: "Quagsire", number: "195", set: "Neo Genesis", jp: true, vintage: true, rar: "U", img: "images/7d4fbbd0f674c263.jpg", own: { n: 12, h: 0 } },
   { name: "Quagsire", number: "195", set: "Neo Revelation", jp: true, vintage: true, rar: "C", img: "images/d5a6cb5787cd7e8a.jpg", own: { n: 0, h: 0 } },
@@ -1732,17 +1738,31 @@ const byFam={};
 CARDS.forEach((c,i)=>{const f=family(c);(byFam[f]=byFam[f]||[]).push(i);});
 FAM_ORDER.forEach(fam=>{
   const idxs=byFam[fam]; if(!idxs||!idxs.length)return;
+  // unmerged first, then merged grouped by art id
+  idxs.sort((a,b)=>{
+    const ca=CARDS[a], cb=CARDS[b];
+    const ma=ca.art?1:0, mb=cb.art?1:0;
+    if(ma!==mb) return ma-mb;
+    if(ma&&ca.art!==cb.art) return ca.art<cb.art?-1:1;
+    return a-b;
+  });
+  const todo=idxs.filter(i=>!CARDS[i].art).length;
   const sec=document.createElement('section');
-  const h=document.createElement('h2'); h.className='fam'; h.innerHTML=fam+' <span class="fc">'+idxs.length+' 张</span>';
+  if(todo===0) sec.className='allmerged';
+  const h=document.createElement('h2'); h.className='fam';
+  h.innerHTML=fam+' <span class="fc">'+idxs.length+' 张 · '+(todo?('<b style="color:#c07a2b">'+todo+' 待处理</b>'):'<b style="color:#6ba05c">已全部合并</b>')+'</span>';
   const g=document.createElement('div'); g.className='grid';
   idxs.forEach(i=>{
     const c=CARDS[i], n=i+1;
     const img=c.img?('<img src="'+c.img+'" loading="lazy" onerror="this.parentNode.innerHTML=\'<div class=noimg>图待补</div>\'">'):'<div class="noimg">图待补</div>';
     const lang=c.jp?'JP':'EN'; const v=(saved[n]||'');
-    const el=document.createElement('div'); el.className='card';
-    el.innerHTML='<div class="num">'+n+'</div><div class="imgwrap">'+img+'</div>'
+    const el=document.createElement('div'); el.className='card'+(c.art?' merged':'');
+    const bottom=c.art
+      ?('<div class="artbadge">✓ 已合并 · '+c.art+'</div>')
+      :('<input data-i="'+n+'" placeholder="记号" value="'+v.replace(/"/g,'&quot;')+'">');
+    el.innerHTML='<div class="num'+(c.art?' mnum':'')+'">'+n+'</div><div class="imgwrap">'+img+'</div>'
       +'<div class="meta"><b>'+c.name+'</b><br><span class="dim">'+c.set+' · #'+(c.numDisplay||c.number)+' · '+lang+'</span></div>'
-      +'<input data-i="'+n+'" placeholder="记号" value="'+v.replace(/"/g,'&quot;')+'">';
+      +bottom;
     g.appendChild(el);
   });
   sec.appendChild(h); sec.appendChild(g); root.appendChild(sec);
@@ -1758,5 +1778,6 @@ function exp(){
   o.textContent=lines.length?('按记号分组：\n'+lines.join('\n')):'(还没有任何标注)';
   o.scrollIntoView({behavior:'smooth'});
 }
+function tgl(){const on=document.body.classList.toggle('hide-merged');document.getElementById('tglbtn').textContent=on?'显示已合并':'隐藏已合并';}
 function clr(){if(confirm('确定清空所有标注？')){localStorage.removeItem('artcheck');localStorage.removeItem('artcheck2');location.reload();}}
 </script></body></html>
