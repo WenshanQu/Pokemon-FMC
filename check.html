@@ -4,13 +4,15 @@
 <style>
   *{box-sizing:border-box}
   body{font-family:system-ui,-apple-system,"PingFang SC",sans-serif;background:#f5f6f7;margin:0;padding:0 14px 40px;color:#1e2227;}
-  .bar{position:sticky;top:0;background:#f5f6f7;padding:12px 0;z-index:9;border-bottom:1px solid #e4e7ea;text-align:center;}
+  .bar{position:sticky;top:0;background:#f5f6f7;padding:12px 0;z-index:20;border-bottom:1px solid #e4e7ea;text-align:center;}
   h1{font-size:17px;margin:0 0 6px;}
   .tip{font-size:12px;color:#6b7280;line-height:1.5;margin-bottom:8px;}
   button{padding:8px 18px;border-radius:99px;border:none;background:#5d6b78;color:#fff;font-weight:700;font-size:13px;cursor:pointer;margin:0 4px;}
   button.ghost{background:#fff;color:#5d6b78;border:1px solid #cfd4d9;}
-  #out{display:none;white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:12px;background:#fff;border:1px solid #e4e7ea;border-radius:8px;padding:10px;margin:10px auto 0;max-width:560px;text-align:left;max-height:200px;overflow:auto;}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;margin-top:14px;}
+  #out{display:none;white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:12px;background:#fff;border:1px solid #e4e7ea;border-radius:8px;padding:10px;margin:10px auto 0;max-width:560px;text-align:left;max-height:220px;overflow:auto;}
+  .fam{font-size:19px;font-weight:800;margin:22px 2px 10px;position:sticky;top:96px;background:#f5f6f7;padding:6px 0;z-index:8;}
+  .fam .fc{font-size:12px;font-weight:600;color:#6b7280;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;}
   .card{background:#fff;border:1px solid #e4e7ea;border-radius:10px;padding:8px;position:relative;}
   .num{position:absolute;top:7px;left:7px;min-width:26px;height:26px;padding:0 6px;border-radius:99px;background:#5d6b78;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,.2);}
   .imgwrap{width:100%;aspect-ratio:63/88;background:#edeff1;border-radius:7px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
@@ -24,12 +26,12 @@
 </style></head><body>
 <div class="bar">
   <h1>画作核对工具 · 共 <span id="cnt"></span> 张</h1>
-  <div class="tip">看图判断：<b>同一张画作</b>的卡，在输入框里填<b>相同的记号</b>（比如都填该组里最小的编号，或 A、B…随你）。留空=暂不处理。改动自动保存。标完点「导出标注」把结果发给我即可。</div>
+  <div class="tip">看图判断：<b>同一张画作</b>的卡，在输入框里填<b>相同的记号</b>（比如都填该组里最小的编号，或 A、B…随你）。留空=暂不处理。改动自动保存。标完点「导出标注」把结果发给我。</div>
   <button onclick="exp()">导出标注</button>
   <button class="ghost" onclick="clr()">清空全部</button>
   <div id="out"></div>
 </div>
-<div class="grid" id="grid"></div>
+<div id="root"></div>
 <script>
 const CARDS = [
   { name: "Slowbro", number: 43, total: 62, set: "Fossil",
@@ -1729,33 +1731,40 @@ const CARDS = [
   { name: "Sabrina's Slowpoke", number: 44, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/sabrina%27s-slowpoke-79", img: "images/jp_sabrina_slowpoke_44.png", own: { n: 0, h: 0 } },
   { name: "Giovanni's Meowth", number: 52, set: "Challenge from the Darkness", jp: true, pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-52", img: "images/jp_giovanni_meowth_52.jpg", own: { n: 0, h: 0 } },
   { name: "Giovanni's Meowth", number: 52, numDisplay: "52 (Lv.17)", set: "Challenge from the Darkness", jp: true, vintage: true, rar: "R", pc: "https://www.pricecharting.com/game/pokemon-japanese-challenge-from-the-darkness/giovanni%27s-meowth-lv-17-52", img: "images/jp_giovanni_meowth_lv17_52.jpg", own: { n: 0, h: 0 } },];
-const grid=document.getElementById('grid');
+const FAM_ORDER=['Meowth','Psyduck','Slowpoke','Slowbro','Slowking','Quagsire','其他'];
+function family(c){const n=c.name;if(/Quagsire/i.test(n))return'Quagsire';if(/Slowking/i.test(n))return'Slowking';if(/Slowbro/i.test(n))return'Slowbro';if(/Slowpoke/i.test(n))return'Slowpoke';if(/Psyduck/i.test(n))return'Psyduck';if(/Meowth/i.test(n))return'Meowth';return'其他';}
+const root=document.getElementById('root');
 document.getElementById('cnt').textContent=CARDS.length;
 const saved=JSON.parse(localStorage.getItem('artcheck')||'{}');
-CARDS.forEach((c,i)=>{
-  const n=i+1;
-  const img=c.img?('<img src="'+c.img+'" loading="lazy" onerror="this.parentNode.innerHTML=\'<div class=noimg>图待补</div>\'">'):'<div class="noimg">图待补</div>';
-  const lang=c.jp?'JP':'EN';
-  const v=(saved[n]||'');
-  const el=document.createElement('div');el.className='card';
-  el.innerHTML='<div class="num">'+n+'</div><div class="imgwrap">'+img+'</div>'
-    +'<div class="meta"><b>'+c.name+'</b><br><span class="dim">'+c.set+' · #'+(c.numDisplay||c.number)+' · '+lang+'</span></div>'
-    +'<input data-i="'+n+'" placeholder="记号" value="'+v.replace(/"/g,'&quot;')+'">';
-  grid.appendChild(el);
+const byFam={};
+CARDS.forEach((c,i)=>{const f=family(c);(byFam[f]=byFam[f]||[]).push(i);});
+FAM_ORDER.forEach(fam=>{
+  const idxs=byFam[fam]; if(!idxs||!idxs.length)return;
+  const sec=document.createElement('section');
+  const h=document.createElement('h2'); h.className='fam'; h.innerHTML=fam+' <span class="fc">'+idxs.length+' 张</span>';
+  const g=document.createElement('div'); g.className='grid';
+  idxs.forEach(i=>{
+    const c=CARDS[i], n=i+1;
+    const img=c.img?('<img src="'+c.img+'" loading="lazy" onerror="this.parentNode.innerHTML=\'<div class=noimg>图待补</div>\'">'):'<div class="noimg">图待补</div>';
+    const lang=c.jp?'JP':'EN'; const v=(saved[n]||'');
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML='<div class="num">'+n+'</div><div class="imgwrap">'+img+'</div>'
+      +'<div class="meta"><b>'+c.name+'</b><br><span class="dim">'+c.set+' · #'+(c.numDisplay||c.number)+' · '+lang+'</span></div>'
+      +'<input data-i="'+n+'" placeholder="记号" value="'+v.replace(/"/g,'&quot;')+'">';
+    g.appendChild(el);
+  });
+  sec.appendChild(h); sec.appendChild(g); root.appendChild(sec);
 });
-function refl(inp){ inp.classList.toggle('filled', !!inp.value.trim()); }
-document.querySelectorAll('#grid input').forEach(refl);
-grid.addEventListener('input',e=>{
-  if(e.target.tagName!=='INPUT')return;
-  saved[e.target.dataset.i]=e.target.value; localStorage.setItem('artcheck',JSON.stringify(saved)); refl(e.target);
-});
+function refl(inp){inp.classList.toggle('filled',!!inp.value.trim());}
+document.querySelectorAll('#root input').forEach(refl);
+root.addEventListener('input',e=>{if(e.target.tagName!=='INPUT')return;saved[e.target.dataset.i]=e.target.value;localStorage.setItem('artcheck',JSON.stringify(saved));refl(e.target);});
 function exp(){
   const g={};
-  document.querySelectorAll('#grid input').forEach(inp=>{ const t=inp.value.trim(); if(t){ (g[t]=g[t]||[]).push(inp.dataset.i); } });
+  document.querySelectorAll('#root input').forEach(inp=>{const t=inp.value.trim();if(t){(g[t]=g[t]||[]).push(inp.dataset.i);}});
   const lines=Object.keys(g).sort().map(k=>k+' => '+g[k].join(', '));
-  const o=document.getElementById('out'); o.style.display='block';
+  const o=document.getElementById('out');o.style.display='block';
   o.textContent=lines.length?('按记号分组：\n'+lines.join('\n')):'(还没有任何标注)';
   o.scrollIntoView({behavior:'smooth'});
 }
-function clr(){ if(confirm('确定清空所有标注？')){ localStorage.removeItem('artcheck'); location.reload(); } }
+function clr(){if(confirm('确定清空所有标注？')){localStorage.removeItem('artcheck');location.reload();}}
 </script></body></html>
