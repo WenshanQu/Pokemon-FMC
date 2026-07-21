@@ -1726,7 +1726,8 @@ const FAM_ORDER=['Meowth','Psyduck','Slowpoke','Slowbro','Slowking','Quagsire','
 function family(c){const n=c.name;if(/Quagsire/i.test(n))return'Quagsire';if(/Slowking/i.test(n))return'Slowking';if(/Slowbro/i.test(n))return'Slowbro';if(/Slowpoke/i.test(n))return'Slowpoke';if(/Psyduck/i.test(n))return'Psyduck';if(/Meowth/i.test(n))return'Meowth';return'其他';}
 const root=document.getElementById('root');
 document.getElementById('cnt').textContent=CARDS.length;
-const saved=JSON.parse(localStorage.getItem('artcheck')||'{}');
+try{localStorage.removeItem('artcheck');}catch(e){}
+const saved=JSON.parse(localStorage.getItem('artcheck2')||'{}');
 const byFam={};
 CARDS.forEach((c,i)=>{const f=family(c);(byFam[f]=byFam[f]||[]).push(i);});
 FAM_ORDER.forEach(fam=>{
@@ -1748,7 +1749,7 @@ FAM_ORDER.forEach(fam=>{
 });
 function refl(inp){inp.classList.toggle('filled',!!inp.value.trim());}
 document.querySelectorAll('#root input').forEach(refl);
-root.addEventListener('input',e=>{if(e.target.tagName!=='INPUT')return;saved[e.target.dataset.i]=e.target.value;localStorage.setItem('artcheck',JSON.stringify(saved));refl(e.target);});
+root.addEventListener('input',e=>{if(e.target.tagName!=='INPUT')return;saved[e.target.dataset.i]=e.target.value;localStorage.setItem('artcheck2',JSON.stringify(saved));refl(e.target);});
 function exp(){
   const g={};
   document.querySelectorAll('#root input').forEach(inp=>{const t=inp.value.trim();if(t){(g[t]=g[t]||[]).push(inp.dataset.i);}});
@@ -1757,5 +1758,5 @@ function exp(){
   o.textContent=lines.length?('按记号分组：\n'+lines.join('\n')):'(还没有任何标注)';
   o.scrollIntoView({behavior:'smooth'});
 }
-function clr(){if(confirm('确定清空所有标注？')){localStorage.removeItem('artcheck');location.reload();}}
+function clr(){if(confirm('确定清空所有标注？')){localStorage.removeItem('artcheck');localStorage.removeItem('artcheck2');location.reload();}}
 </script></body></html>
