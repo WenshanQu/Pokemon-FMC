@@ -1,0 +1,9 @@
+{
+  "_comment": "JPRICE key (set/number, or set/number/name for vintage cards) -> snkrdunk trading-card ID. URL = https://snkrdunk.com/en/trading-cards/<id>. snkrdunk gives an SGD market price (raw/ungraded only, no graded). IDs are not derivable, so add them as you collect snkrdunk links. Cards without an ID here keep their current JPRICE + the live link.",
+  "HeartGold SoulSilver/018/070/Slowbro": "556750",
+  "HeartGold SoulSilver/027/070/Quagsire": "556879",
+  "Neo Revelation/195/Quagsire": "460687",
+  "Neo Genesis/195/Quagsire": "459390",
+  "Bulbasaur Deck/16": "453640",
+  "L-P Promo (Domino's)/030/L-P": "453460"
+}

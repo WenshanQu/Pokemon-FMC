@@ -1,87 +1,132 @@
-// Weekly price refresh for the JPRICE table in index.html.
-// Reads PriceCharting pages through the r.jina.ai reader proxy (PriceCharting itself
-// is Cloudflare-protected). SAFE BY DESIGN:
-//   - only rewrites the `const JPRICE={...};` JSON blob, never any card structure
-//   - skips anything it cannot fetch or parse
-//   - validates (JSON re-parses + card count unchanged) before writing
-// Coverage is driven by scripts/price-sources.json (JPRICE key -> PriceCharting URL).
+// Weekly price refresh for index.html.
+//
+// Sources (both plain-fetchable, no API key, not Cloudflare-blocked):
+//   * EN cards -> Limitless TCG   https://limitlesstcg.com/cards/<code>/<number>
+//                 (TCGplayer market price, USD, ungraded). Set-code map: scripts/limitless-sets.json
+//   * JP cards -> snkrdunk         https://snkrdunk.com/en/trading-cards/<id>
+//                 (market price, SGD, ungraded). ID map: scripts/snkr-ids.json
+//
+// Only the RAW / ungraded price is updated. PSA10 (graded) has no scrapable source, so
+// existing PSA10 numbers are left untouched.
+//
+// SAFE BY DESIGN:
+//   - EN prices are edited entry-by-entry inside the CARDS array; only the numbers inside
+//     each card's `unl:{ rawUSD, rawSGD }` are touched, nothing structural.
+//   - JP prices only rewrite the `const JPRICE={...};` JSON blob.
+//   - Anything that can't be fetched / parsed / mapped is skipped.
+//   - Before writing, it validates the card count and JPRICE JSON are still intact.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const FX = 1.292;            // USD -> SGD, matches the site's fx
+const FX = 1.292;                 // USD -> SGD (matches the site)
 const HTML = 'index.html';
-const SOURCES = 'scripts/price-sources.json';
+const UA = { 'User-Agent': 'Mozilla/5.0 (compatible; fmc-price-bot/1.0)' };
 const round2 = n => Math.round(n * 100) / 100;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const LIMITLESS_SETS = JSON.parse(readFileSync('scripts/limitless-sets.json', 'utf8'));
+const SNKR_IDS = JSON.parse(readFileSync('scripts/snkr-ids.json', 'utf8'));
 
 async function fetchText(url) {
-  const res = await fetch('https://r.jina.ai/' + url, { headers: { Accept: 'text/plain' } });
+  const res = await fetch(url, { headers: UA, redirect: 'follow' });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   return res.text();
 }
 
-function parsePrices(text) {
-  const grab = re => {
-    const m = text.match(re);
-    if (!m) return null;
-    const n = parseFloat(m[1].replace(/,/g, ''));
-    return Number.isFinite(n) ? n : null;
-  };
-  // PriceCharting's price-summary tokens render as the label glued to the price,
-  // e.g. "Ungraded$15.00" / "PSA 10$1,383.75". Require the "$" to sit right next to
-  // the label (0-2 spaces) so we never grab an eBay sold-listing price that merely
-  // contains "PSA 10 ... $50,000" somewhere in its title.
-  const raw = grab(/Ungraded[\s ]{0,2}\$([0-9][0-9,]*\.?[0-9]*)/i);
-  const psa = grab(/PSA[\s ]*10[\s ]{0,2}\$([0-9][0-9,]*\.?[0-9]*)/i);
-  return { raw, psa };
+// ---- price extractors -------------------------------------------------------
+function limitlessUSD(html) {
+  // primary market price shown on the card page
+  const m = html.match(/<span class="card-price usd">\s*\$([0-9][0-9,]*\.?[0-9]*)/i);
+  if (!m) return null;
+  const n = parseFloat(m[1].replace(/,/g, ''));
+  return Number.isFinite(n) ? n : null;
 }
+function snkrSGD(html) {
+  // analytics blob: {"currency":"SGD",...,"price":97,...}
+  const m = html.match(/"currency":"SGD"[^}]*?"price":([0-9]+(?:\.[0-9]+)?)/);
+  if (!m) return null;
+  const n = parseFloat(m[1]);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+// ---- CARDS / entry helpers --------------------------------------------------
+const field = (e, name) => {
+  const m = e.match(new RegExp(name + ':\\s*"([^"]*)"'));
+  return m ? m[1] : '';
+};
+const numField = e => {
+  const m = e.match(/number:\s*"?([^,"}]+)"?/);
+  return m ? m[1].trim() : '';
+};
 
 async function main() {
   const html = readFileSync(HTML, 'utf8');
-  const sources = JSON.parse(readFileSync(SOURCES, 'utf8'));
+  const cardsStart = html.indexOf('const CARDS = [') + 'const CARDS = ['.length;
+  const cardsEnd = html.indexOf('];', cardsStart);
+  const inner = html.slice(cardsStart, cardsEnd);
+  const namesBefore = (html.match(/name: "/g) || []).length;
 
-  const m = html.match(/const JPRICE=(\{.*?\});/s);
-  if (!m) { console.error('JPRICE block not found'); process.exit(1); }
-  const jprice = JSON.parse(m[1]);
-  const cardsBefore = (html.match(/name: "/g) || []).length;
+  const entries = inner.split(/(?=\{\s*(?:imgAlt|art|name):)/).filter(s => s.trimStart().startsWith('{'));
 
-  // Match keys by Unicode NFC form (the "é" in "Pokémon VS" can differ between files),
-  // but always update via the ORIGINAL JPRICE key so the page keeps working.
-  const norm = s => s.normalize('NFC');
-  const jkeys = Object.keys(jprice);
-
-  let changed = 0;
-  for (const [srcKey, url] of Object.entries(sources)) {
-    if (srcKey.startsWith('_')) continue;         // skip _comment
-    const key = jkeys.find(k => norm(k) === norm(srcKey));
-    if (!key) { console.log('skip (key not in JPRICE):', srcKey); continue; }
+  // ---------- EN: update inline unl prices via Limitless ----------
+  let enChanged = 0, enFail = 0;
+  const enSkipSet = new Set();
+  for (let i = 0; i < entries.length; i++) {
+    const e = entries[i];
+    if (/jp:\s*true/.test(e)) continue;
+    if (!/unl:\s*\{[^}]*rawUSD:/.test(e)) continue;      // no unl raw price to update
+    const set = field(e, 'set');
+    const code = LIMITLESS_SETS[set];
+    if (!code || code.startsWith('_')) { if (set) enSkipSet.add(set); continue; }
+    const num = numField(e).replace(/^0+(?=\d)/, '');     // limitless uses printed number, no leading zeros
+    if (!/^[A-Za-z]*\d+[A-Za-z0-9-]*$/.test(num)) continue;
     try {
-      const { raw, psa } = parsePrices(await fetchText(url));
-      if (raw == null) { console.log('skip (no raw price parsed):', key); continue; }
-      const e = jprice[key];
-      const pu = psa != null ? psa : e.pu;        // keep old PSA10 if page has none
-      const next = { ru: raw, pu, r: round2(raw * FX), p: pu != null ? round2(pu * FX) : null };
-      if (e.ru !== next.ru || e.pu !== next.pu) {
-        jprice[key] = next; changed++;
-        console.log('updated', key, '-> raw', raw, 'psa', pu);
-      }
-    } catch (err) {
-      console.log('error', key, err.message);
-    }
-    await new Promise(r => setTimeout(r, 3000));   // gentle on the proxy
+      const usd = limitlessUSD(await fetchText(`https://limitlesstcg.com/cards/${code}/${num}`));
+      if (usd == null) { enFail++; continue; }
+      const sgd = round2(usd * FX);
+      const ne = e
+        .replace(/(unl:\s*\{[^}]*?rawUSD:\s*)[0-9.]+/, `$1${usd}`)
+        .replace(/(unl:\s*\{[^}]*?rawSGD:\s*)[0-9.]+/, `$1${sgd}`);
+      if (ne !== e) { entries[i] = ne; enChanged++; console.log(`EN  ${set} #${num} -> $${usd} (S$${sgd})`); }
+    } catch (err) { enFail++; console.log(`EN  err ${set} #${num}: ${err.message}`); }
+    await sleep(400);
   }
+  if (enSkipSet.size) console.log('EN  unmapped sets skipped:', [...enSkipSet].join(', '));
 
-  if (changed === 0) { console.log('no changes'); return; }
+  const newInner = '\r\n  ' + entries.join('');
+  let out = html.slice(0, cardsStart) + newInner + html.slice(cardsEnd);
 
-  const newHtml = html.replace(/const JPRICE=\{.*?\};/s, () => 'const JPRICE=' + JSON.stringify(jprice) + ';');
+  // ---------- JP: update JPRICE blob via snkrdunk ----------
+  const jm = out.match(/const JPRICE=(\{.*?\});/s);
+  if (!jm) { console.error('JPRICE block not found'); process.exit(1); }
+  const jprice = JSON.parse(jm[1]);
+  let jpChanged = 0;
+  for (const [key, id] of Object.entries(SNKR_IDS)) {
+    if (key.startsWith('_')) continue;
+    try {
+      const sgd = snkrSGD(await fetchText(`https://snkrdunk.com/en/trading-cards/${id}`));
+      if (sgd == null) { console.log(`JP  no price: ${key}`); continue; }
+      const usd = round2(sgd / FX);
+      const prev = jprice[key] || {};
+      const next = { r: sgd, ru: usd, p: prev.p ?? null, pu: prev.pu ?? null };
+      if (prev.r !== next.r || prev.ru !== next.ru) {
+        jprice[key] = next; jpChanged++; console.log(`JP  ${key} -> S$${sgd} ($${usd})`);
+      }
+    } catch (err) { console.log(`JP  err ${key}: ${err.message}`); }
+    await sleep(400);
+  }
+  out = out.replace(/const JPRICE=\{.*?\};/s, () => 'const JPRICE=' + JSON.stringify(jprice) + ';');
 
-  // validate before writing
-  const check = newHtml.match(/const JPRICE=(\{.*?\});/s);
-  const cardsAfter = (newHtml.match(/name: "/g) || []).length;
-  if (!check || cardsAfter !== cardsBefore) { console.error('validation failed — aborting'); process.exit(1); }
-  JSON.parse(check[1]);   // throws if the new blob is not valid JSON
+  // ---------- validate + write ----------
+  const namesAfter = (out.match(/name: "/g) || []).length;
+  const jcheck = out.match(/const JPRICE=(\{.*?\});/s);
+  if (namesAfter !== namesBefore) { console.error(`ABORT: card count changed ${namesBefore} -> ${namesAfter}`); process.exit(1); }
+  if (!jcheck) { console.error('ABORT: JPRICE missing after edit'); process.exit(1); }
+  JSON.parse(jcheck[1]);   // throws if invalid
 
-  writeFileSync(HTML, newHtml);
-  console.log('done —', changed, 'price(s) updated');
+  if (enChanged === 0 && jpChanged === 0) { console.log('No price changes.'); return; }
+  writeFileSync(HTML, out);
+  console.log(`Done — EN updated ${enChanged}, JP updated ${jpChanged}, EN misses ${enFail}.`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
