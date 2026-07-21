@@ -282,7 +282,12 @@
   .gown { font-size: 10.5px; font-weight: 700; margin-top: 8px; padding: 3.5px 4px; border-radius: 7px; }
   .gown-y { color: #43723a; background: #e8f4e2; }
   .gown-n { color: #a4aab0; background: #f0f1f2; }
-  .gpc { display: block; text-align: center; margin-top: 7px; padding: 5px 4px; border-radius: 7px; background: #eef2f5; color: #5f8fa8; font-size: 10.5px; font-weight: 700; text-decoration: none; }
+  .gactions { display: flex; gap: 5px; margin-top: 7px; }
+  .gactions .gcopy, .gactions .gpc { flex: 1; min-width: 0; margin-top: 0; }
+  .gcopy { border: none; cursor: pointer; text-align: center; padding: 5px 4px; border-radius: 7px; background: #edeff1; color: #667380; font-size: 10.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gcopy.copied { background: #6ba05c; color: #fff; }
+  .gcopy:active { opacity: .78; }
+  .gpc { display: block; text-align: center; padding: 5px 4px; border-radius: 7px; background: #eef2f5; color: #5f8fa8; font-size: 10.5px; font-weight: 700; text-decoration: none; white-space: nowrap; }
   .gpc:active { opacity: .78; }
   /* image lightbox */
   #lightbox {
@@ -2337,6 +2342,14 @@ function copyCard(idx) {
   const btn = document.querySelector('.detail-copy');
   if (btn) { btn.classList.add('copied'); setTimeout(function () { btn.classList.remove('copied'); }, 1300); }
 }
+function copyGCard(btn) {
+  const s = btn.getAttribute('data-c') || '';
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s);
+  else { const ta = document.createElement('textarea'); ta.value = s; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  const t = btn.textContent;
+  btn.classList.add('copied'); btn.textContent = '已复制 ✓';
+  setTimeout(function () { btn.classList.remove('copied'); btn.textContent = t; }, 1200);
+}
 function ownInfo(c) {
   if (c.jp) {
     const n = (c.own && c.own.n) || 0, h = (c.own && c.own.h) || 0, t = n + h;
@@ -2362,12 +2375,16 @@ function groupDetailHtml(rep, members) {
     let fin = '';
     if (c.holo) fin = '<span class="gfin h">✦ 闪</span>';
     else if (holoKeys.has(String(c.set) + '|' + String(c.number))) fin = '<span class="gfin c">普通</span>';
+    const copyStr = (c.name + ' #' + (c.numDisplay || c.number) + (c.total ? '/' + c.total : '') + ' · ' + c.set + ' · ' + (c.jp ? 'JP' : 'ENG') + (c.holo ? ' · holo' : '')).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
     return `<div class="gcard ${owned ? '' : 'gmiss'}">
       <div class="gimg-wrap">${img}<span class="glang ${c.jp ? 'jp' : 'en'}">${c.jp ? 'JP' : 'ENG'}</span>${fin}${c.imgAlt && c.img ? '<span class="gimgalt" title="暂用同款其他版本的图">代图</span>' : ''}</div>
       <div class="gset">${c.set}</div>
       <div class="gnum">#${c.numDisplay || c.number}${c.total ? '/' + c.total : ''}</div>
       <div class="gown ${owned ? 'gown-y' : 'gown-n'}">${oi.label}</div>
-      <a class="gpc" href="${pcUrl(c)}" target="_blank" rel="noopener noreferrer">实时价 ↗</a>
+      <div class="gactions">
+        <button class="gcopy" data-c="${copyStr}" onclick="copyGCard(this)" title="复制卡片定位信息">⧉ 复制</button>
+        <a class="gpc" href="${pcUrl(c)}" target="_blank" rel="noopener noreferrer">实时价 ↗</a>
+      </div>
     </div>`;
   }).join('');
   return `<div class="gdetail">
