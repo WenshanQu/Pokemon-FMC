@@ -96,6 +96,10 @@ Key facts:
 A holo-only promo you own 2 of → `own {n:0, h:2}`. A plain common you own 3 of → `{n:3, h:0}`.
 (For EN, `holo:true` marks the finish; the count model is separate.)
 
+**Finish default:** if the user does NOT say "holo / 闪 / reverse", the copy is the **common /
+non-holo** version. Apply the count to the common entry (EN `qty`, JP `own.n`), never the holo one.
+Only touch the holo entry (`holo:true` / `own.h`) when the user explicitly says holo/闪.
+
 ### Updating an existing entry's quantity (the most common task)
 1. `grep` the card to find it (anchor on set + number, or the img filename).
 2. JP → change `own:{n,h}`. EN single → change `qty`. EN dual → change `qty1ed`/`qtyUnl`.
@@ -157,13 +161,17 @@ one dex group. Ids are arbitrary short strings (`z18`, `m117`, `pAR28`, `m203ir`
 ## 6. Editing method — DO IT THIS WAY (avoids corrupting the file)
 
 **Environment:** Windows. PowerShell is primary and reliable for file writes; Bash is available for
-`git`/`grep`/`curl`. The file is **CRLF**, UTF-8 without BOM.
+`git`/`grep`/`curl`. UTF-8 without BOM. **Line endings vary:** local Windows edits leave it CRLF, but
+the weekly price bot runs on Linux CI and rewrites `index.html` as **LF**, so after any bot commit /
+merge the file is LF. **Detect before building multi-line anchors:** `grep -c $'\r' index.html`
+(or check `$c.Contains("`r`n")`) → set `$nl = "`r`n"` (CRLF) or `$nl = "`n"` (LF) accordingly. A
+multi-line `.Replace` with the wrong newline silently "not found"-aborts.
 
 **Rules**
 1. **Anchor on unique strings, never blind line numbers.** The **img filename** is the best unique
    anchor for an entry. EN entries are **multi-line** (fields wrap); JP entries are **single-line**.
-2. For multi-line anchors, build the newline in: `$nl = "`r`n"` and concatenate
-   `'    field...,' + $nl + '    img: "images/....png",'`.
+2. For multi-line anchors, build the newline in: `$nl = "`r`n"` (CRLF) **or** `$nl = "`n"` (LF) —
+   pick per the detection above — and concatenate `'    field...,' + $nl + '    img: "images/....png",'`.
 3. Edit the whole file with `[IO.File]::ReadAllText` / `.Replace(old,new)` / `[IO.File]::WriteAllText`
    (UTF-8 no BOM preserves glyphs like **δ**). Build non-ASCII by code point: `[char]0x03B4` = δ.
 4. To iterate entries programmatically, split the array:
@@ -184,7 +192,8 @@ one dex group. Ids are arbitrary short strings (`z18`, `m117`, `pAR28`, `m203ir`
 **Reusable batch skeleton** (adapt per task):
 ```powershell
 $f='c:\Users\wensh\OneDrive\Desktop\Pokemon FMC\index.html'
-$c=[IO.File]::ReadAllText($f); $before=([regex]::Matches($c,'name: "')).Count; $fail=@(); $nl="`r`n"
+$c=[IO.File]::ReadAllText($f); $before=([regex]::Matches($c,'name: "')).Count; $fail=@()
+$nl = $(if($c.Contains("`r`n")){"`r`n"}else{"`n"})   # match the file's actual line endings
 function Rep($old,$new){ if(-not $script:c.Contains($old)){$script:fail+=$old.Substring(0,60);return}; $script:c=$script:c.Replace($old,$new) }
 # ... Rep 'anchor old' 'anchor new'  (one per change) ...
 # ... inserts before ']' ...
