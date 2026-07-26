@@ -272,7 +272,7 @@
   .gdetail-title { font-size: 21px; font-weight: 800; color: var(--text); letter-spacing: .2px; }
   .gdetail-sub { display: inline-block; font-size: 12px; color: var(--text-dim); margin-top: 7px; padding: 4px 12px; background: var(--card-bg-2); border-radius: 99px; }
   .gdetail-sub b { color: var(--accent); }
-  .gdetail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 13px; margin-top: 20px; }
+  .gdetail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 13px; margin-top: 20px; }
   .gcard { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px 8px 10px; text-align: center; box-shadow: 0 1px 2px rgba(30,40,60,.04); }
   .gcard.gmiss { opacity: .58; }
   .gimg-wrap { position: relative; aspect-ratio: 63 / 88; border-radius: 8px; overflow: hidden; background: var(--card-bg-2); }
@@ -290,8 +290,8 @@
   .gown { font-size: 10.5px; font-weight: 700; margin-top: 8px; padding: 3.5px 4px; border-radius: 7px; }
   .gown-y { color: #43723a; background: #e8f4e2; }
   .gown-n { color: #a4aab0; background: #f0f1f2; }
-  .gactions { display: flex; gap: 4px; margin-top: 7px; }
-  .gactions .gcopy, .gactions .gpc { flex: 1; min-width: 0; margin-top: 0; }
+  .gactions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+  .gactions .gcopy, .gactions .gpc { flex: 1 1 42px; min-width: 0; margin-top: 0; }
   .gcopy { border: none; cursor: pointer; text-align: center; padding: 5px 3px; border-radius: 7px; background: #edeff1; color: #667380; font-size: 10px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .gcopy.copied { background: #6ba05c; color: #fff; }
   .gcopy:active { opacity: .78; }
@@ -492,7 +492,7 @@ const CARDS = [
               unl: { rawUSD: 167.39, rawSGD: 216, psaUSD: 12101.47, psaSGD: 15635 } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "q22", name: "Quagsire", number: 48, total: 64, set: "Neo Revelation",
-    missing: "1ED", qtyUnl: 3,
+    missing: "1ED", qtyUnl: 4,
     img: "images/4274a3c9f99d71de.png",
     prices: { ed1: { rawUSD: 6.37, rawSGD: 8.23, psaUSD: 149.84, psaSGD: 193.59 },
               unl: { rawUSD: 6.27, rawSGD: 8.1, psaUSD: 179.19, psaSGD: 232 } },
@@ -510,7 +510,7 @@ const CARDS = [
               unl: { rawUSD: 35.5, rawSGD: 45.87, psaUSD: 124.86, psaSGD: 161.32 } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "p25", name: "Psyduck", number: 79, total: 105, set: "Neo Destiny",
-    missing: "BOTH",
+    qtyUnl: 1,
     img: "images/c397be581cf248fa.png",
     prices: { ed1: { rawUSD: 61.00, rawSGD: 78.81, psaUSD: 500.00, psaSGD: 646 },
               unl: { rawUSD: 31.56, rawSGD: 40.78, psaUSD: 317.39, psaSGD: 410 } },
@@ -696,7 +696,7 @@ const CARDS = [
               unl: { rawUSD: 50, rawSGD: 64.6, psaUSD: null, psaSGD: null } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "z17", name: "Slowbro", number: 14, total: 112, set: "FireRed & LeafGreen",
-    missing: "UNL", no1ed: true, holo: true,
+    qty: 1, no1ed: true, holo: true,
     img: "images/6232a56e8cd0228b.png",
     prices: { ed1: null,
               unl: { rawUSD: 50, rawSGD: 64.6, psaUSD: 1982.50, psaSGD: 2561 } },
@@ -714,7 +714,7 @@ const CARDS = [
               unl: { rawUSD: 1.77, rawSGD: 2.29, psaUSD: 1198.74, psaSGD: 1549 } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "s59", name: "Slowpoke", number: 80, total: 112, set: "FireRed & LeafGreen",
-    qty: 2, no1ed: true,
+    qty: 3, no1ed: true,
     img: "images/1f795cbf2e44cf70.png",
     prices: { ed1: null,
               unl: { rawUSD: 18.59, rawSGD: 24.02, psaUSD: null, psaSGD: null } },
@@ -726,7 +726,7 @@ const CARDS = [
               unl: { rawUSD: 18.59, rawSGD: 24.02, psaUSD: 1057.68, psaSGD: 1367 } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "z2", name: "Dark Slowking", number: 9, total: 109, set: "Team Rocket Returns",
-    missing: "UNL", no1ed: true,
+    qty: 1, no1ed: true,
     img: "images/c4a81a58808d1e5e.png",
     prices: { ed1: null,
               unl: { rawUSD: 42.3, rawSGD: 54.65, psaUSD: 1383.32, psaSGD: 1787 } },
@@ -1031,7 +1031,7 @@ const CARDS = [
     prices: { ed1: null, unl: { rawUSD: 0.16, rawSGD: 0.21, psaUSD: 192.50, psaSGD: 249 } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "z34", name: "Slowking", number: 19, total: 131, set: "Prismatic Evolutions",
-    qty: 1, no1ed: true, holo: true,
+    qty: 2, no1ed: true, holo: true,
     img: "images/8f126c485532761a.png",
     prices: { ed1: null, unl: { rawUSD: 0.16, rawSGD: 0.21, psaUSD: null, psaSGD: null } },
     priceDate: "2026-07-18", fx: 1.292 },
@@ -1531,7 +1531,7 @@ const CARDS = [
     prices: { ed1: null, unl: { rawUSD: 1.64, rawSGD: 2.12, psaUSD: 87.24, psaSGD: 112.71 } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "p213", name: "Psyduck", number: 11, total: null, set: "Hidden Fates",
-    qty: 0, no1ed: true,
+    qty: 1, no1ed: true,
     img: "images/4432c8c98e059042.png",
     prices: { ed1: null, unl: { rawUSD: 0.32, rawSGD: 0.41, psaUSD: 39.99, psaSGD: 51.67 } },
     priceDate: "2026-07-18", fx: 1.292 },
@@ -1556,7 +1556,7 @@ const CARDS = [
     prices: { ed1: null, unl: { rawUSD: 0.12, rawSGD: 0.16, psaUSD: 94.75, psaSGD: 122.42 } },
     priceDate: "2026-07-18", fx: 1.292 },
   { art: "p218", name: "Psyduck", number: 40, total: 236, set: "Cosmic Eclipse",
-    missing: "UNL", no1ed: true,
+    qty: 1, no1ed: true,
     img: "images/3d137daa535e357f.png",
     prices: { ed1: null, unl: { rawUSD: 2.82, rawSGD: 3.64, psaUSD: 173.58, psaSGD: 224.27 } },
     priceDate: "2026-07-18", fx: 1.292 },
@@ -1743,8 +1743,8 @@ const CARDS = [
   { art: "p118", name: "Psyduck", number: "262", set: "SVP", jp: true, img: "images/5e8e8696320d2173.png", own: { n: 0, h: 0 } },
   { art: "pAR28", name: "Psyduck", number: "16", set: "S10P", jp: true, img: "images/0d1bd6f92385ac51.png", own: { n: 2, h: 0 } },
   { art: "p224", name: "Psyduck", number: "76", set: "SI", jp: true, img: "images/c4d285fe5d0693a1.png", own: { n: 0, h: 0 } },
-  { art: "p224", name: "Psyduck", number: "9", set: "S6K", jp: true, img: "images/cf24ee4cc4c1e3d5.png", own: { n: 0, h: 0 } },
-  { art: "p218", name: "Psyduck", number: "17", set: "SM11a", jp: true, img: "images/e4ddbcf126c8d065.png", own: { n: 0, h: 0 } },
+  { art: "p224", name: "Psyduck", number: "9", set: "S6K", jp: true, img: "images/cf24ee4cc4c1e3d5.png", own: { n: 1, h: 0 } },
+  { art: "p218", name: "Psyduck", number: "17", set: "SM11a", jp: true, img: "images/e4ddbcf126c8d065.png", own: { n: 1, h: 0 } },
   { art: "dp9", name: "Psyduck", number: "9", set: "SMP2", jp: true, img: "images/40901b43f52cee17.png", own: { n: 0, h: 0 } },
   { art: "dp10", name: "Psyduck", number: "10", set: "SMP2", jp: true, img: "images/0146f3b0d9b12751.png", own: { n: 0, h: 0 } },
   { art: "p213", name: "Psyduck", number: "13", set: "SML", jp: true, img: "images/478653145b5d7b72.png", own: { n: 0, h: 0 } },
@@ -1769,7 +1769,7 @@ const CARDS = [
   { name: "Slowpoke", number: "70", set: "MP", jp: true, img: "images/0d82275e9534f37c.png", own: { n: 1, h: 0 } },
   { art: "z42", name: "Slowpoke", number: "19", set: "S10b", jp: true, img: "images/9ea610e8ef435d82.png", own: { n: 0, h: 0 } },
   { art: "z45", name: "Slowpoke", number: "11", set: "SM9b", jp: true, img: "images/c272a74f3db6b7d4.png", own: { n: 1, h: 0 } },
-  { art: "z39", name: "Slowpoke", number: "24", set: "SM8", jp: true, img: "images/7501697fddcdaa77.png", own: { n: 0, h: 0 } },
+  { art: "z39", name: "Slowpoke", number: "24", set: "SM8", jp: true, img: "images/7501697fddcdaa77.png", own: { n: 1, h: 0 } },
   { art: "s183", name: "Slowpoke", number: "22", set: "SM2p", jp: true, img: "images/b36aefa4a018cbcc.png", own: { n: 0, h: 0 } },
   { art: "s183", name: "Slowpoke", number: "23", set: "SM2K", jp: true, img: "images/e0082653b234ce74.png", own: { n: 0, h: 0 } },
   { art: "z38", name: "Slowpoke", number: "253", set: "SMP", jp: true, img: "images/969ea9c0228c9874.png", own: { n: 1, h: 0 } },
@@ -1796,14 +1796,14 @@ const CARDS = [
   { art: "z33", name: "Slowking", number: "25", set: "SM8", jp: true, img: "images/e70acfaa05c3120d.png", own: { n: 0, h: 0 } },
   { art: "z28", name: "Slowking", number: "23", set: "SM2p", jp: true, img: "images/jp_slowking_sm2p_23.jpg", own: { n: 0, h: 1 } },
   { art: "z27", name: "Slowking", number: "15", set: "XY9", jp: true, img: "images/6d318a2cb37c38b8.png", own: { n: 1, h: 0 } },
-  { art: "k329", name: "Slowking", number: "34", set: "BW4", jp: true, img: "images/3c186c3b77eb0955.png", own: { n: 1, h: 0 } },
+  { art: "k329", name: "Slowking", number: "34", set: "BW4", jp: true, img: "images/3c186c3b77eb0955.png", own: { n: 2, h: 0 } },
   
   { art: "m123", name: "Meowth", number: "100", set: "M3", jp: true, img: "images/c3db7f3be6237542.png", own: { n: 3, h: 0 } },
   { art: "m124", name: "Meowth", number: "114", set: "M3", jp: true, img: "images/f3dbc8a156490982.png", own: { n: 4, h: 0 } },
   { art: "m134", name: "Meowth", number: "91", set: "SVM", jp: true, img: "images/9e8f1005c71c8bc6.png", own: { n: 0, h: 0 } },
   { art: "m134", name: "Meowth", number: "48", set: "SV6a", jp: true, img: "images/c376fdc15f77758b.png", own: { n: 1, h: 0 } },
   { art: "m245", name: "Meowth", number: "52", set: "SV2a", jp: true, img: "images/64e18bdd47ab8d70.png", own: { n: 0, h: 5 } },
-  { name: "Meowth", number: "192", set: "SVP", jp: true, img: "images/60edb7b840c97ea5.png", own: { n: 2, h: 0 } },
+  { art: "m192", name: "Meowth", number: "192", numDisplay: "192/SV-P", set: "SVP", jp: true, img: "images/60edb7b840c97ea5.png", own: { n: 2, h: 0 } },
   { art: "m227", name: "Meowth", number: "330", set: "SI", jp: true, img: "images/31d0cc9bbe1be203.png", own: { n: 0, h: 0 } },
   { art: "m227", name: "Meowth", number: "55", set: "S6a", jp: true, img: "images/e840eb2ecd6b1355.png", own: { n: 4, h: 0 } },
   { art: "m347", name: "Meowth", number: "28", set: "SP", jp: true, img: "images/a1e81b318a6253b5.png", own: { n: 0, h: 0 } },
@@ -1835,7 +1835,7 @@ const CARDS = [
   { art: "z6", name: "Quagsire", number: "24", set: "SM8b", jp: true, img: "images/df2c2e84fe106b38.png", own: { n: 2, h: 3 } },
   { art: "q217", name: "Quagsire", number: "170", set: "SM8b", jp: true, img: "images/27e451af9d998256.png", own: { n: 2, h: 0 } },
   { art: "z6", name: "Quagsire", number: "19", set: "SM6a", jp: true, img: "images/1776ad62a876df54.png", own: { n: 0, h: 0 } },
-  { art: "z4", name: "Quagsire", number: "39", set: "XY7", jp: true, img: "images/de7ce5bba43e18bc.png", own: { n: 1, h: 0 } },
+  { art: "z4", name: "Quagsire", number: "39", set: "XY7", jp: true, img: "images/de7ce5bba43e18bc.png", own: { n: 2, h: 0 } },
   { art: "z8", name: "Quagsire", number: "11", set: "BW8n", jp: true, img: "images/2a8756bfcc5b586e.png", own: { n: 4, h: 0 } },
   { art: "s207", name: "Psyduck & Slowpoke", number: "11", set: "SM11", jp: true, img: "images/e264e816b721bec0.png", own: { n: 2, h: 0 } },
   { art: "s208", name: "Psyduck & Slowpoke", number: "95", set: "SM11", jp: true, img: "images/7b15cf258037c1c3.png", own: { n: 0, h: 0 } },
@@ -2053,7 +2053,10 @@ const CARDS = [
     { name: "Slowpoke", number: "004", numDisplay: "004/T", set: "T Promo", jp: true, vintage: true, rar: "Promo", img: "images/jp_slowpoke_tpromo.jpg", own: { n: 0, h: 0 } },
     { name: "Slowbro", number: "005", numDisplay: "005/T", set: "T Promo", jp: true, vintage: true, rar: "Promo", img: "images/jp_slowbro_tpromo.jpg", own: { n: 0, h: 0 } },
     { name: "Slowking", number: "006", numDisplay: "006/T", set: "T Promo", jp: true, vintage: true, rar: "Promo", img: "images/jp_slowking_tpromo.jpg", own: { n: 0, h: 0 } },
-];
+    { art: "m192", name: "Meowth", number: 106, numDisplay: "106/094", total: 94, set: "Phantasmal Flames", no1ed: true, holo: true, qty: 12, img: "images/en_meowth_phantasmal_106.jpg" },
+    { art: "m66", name: "Rocket's Meowth", number: "059", numDisplay: "059/084", set: "Rocket Gang Strikes Back", jp: true, vintage: true, rar: "R", img: "images/jp_rockets_meowth_pcg3_059.jpg", own: { n: 1, h: 0 } },
+    { art: "z44", name: "Slowpoke", number: "059", numDisplay: "059/ADV-P", set: "ADV-P Promo", jp: true, vintage: true, rar: "Promo", img: "images/jp_slowpoke_advp_059.jpg", own: { n: 1, h: 0 } },
+    { name: "Slowking", number: "039", numDisplay: "039/070", set: "HeartGold Collection", jp: true, vintage: true, rar: "Holo", img: "images/jp_slowking_l1hg_039.png", own: { n: 1, h: 0 } },];
 
 const $ = s => document.querySelector(s);
 const resultsEl = $('#results'), searchEl = $('#search'),
