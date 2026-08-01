@@ -65,7 +65,8 @@ price refresher split on that — an object starting with any other key gets mer
   vintage: true, rar: "C",    // OPTIONAL: vintage flag + rarity ("C"/"U"/"Holo"/"R"/"AR"…)
   holo: true,                 // OPTIONAL
   img: "images/jp_....png",
-  own: { n: <#common copies>, h: <#holo/AR copies> },
+  own: { n: <#common>, h: <#holo/AR>, n1: <#1st-ed common>, h1: <#1st-ed holo> }, // n1/h1 OPTIONAL
+
   pc: "https://www.pricecharting.com/..." }  // OPTIONAL live-price URL override
 ```
 
@@ -99,6 +100,12 @@ A holo-only promo you own 2 of → `own {n:0, h:2}`. A plain common you own 3 of
 **Finish default:** if the user does NOT say "holo / 闪 / reverse", the copy is the **common /
 non-holo** version. Apply the count to the common entry (EN `qty`, JP `own.n`), never the holo one.
 Only touch the holo entry (`holo:true` / `own.h`) when the user explicitly says holo/闪.
+
+**JP 1st-edition vs unlimited:** vintage JP cards can have both a 1st-Edition print and an Unlimited
+print. Track them in the same `own` object: `n`/`h` = **unlimited** normal/holo, `n1`/`h1` =
+**1st-edition** normal/holo. `isOwned` sums all four; `ownInfo` shows `1版普通×n1 · 1版闪×h1 · 普通×n
+· 闪×h`. So "first edition +1, unlimited +1" on a JP common → `own: { n: 1, h: 0, n1: 1 }`. Omit
+n1/h1 when there's no 1st-ed copy (backward-compatible).
 
 ### Updating an existing entry's quantity (the most common task)
 1. `grep` the card to find it (anchor on set + number, or the img filename).
