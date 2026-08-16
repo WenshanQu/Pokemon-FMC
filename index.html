@@ -2111,7 +2111,7 @@ function badgeHtml(c) {
 }
 function jpCardHtml(c) {
   const img = c.img
-    ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onclick="showLightbox(this.src)" onerror="this.parentNode.innerHTML='<div class=noimg>'+this.alt+'<br>图待补</div>'">`
+    ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onclick="showLightbox(this.src)" onerror="imgErr(this,'noimg')">`
     : `<div class="noimg">${c.set}<br>#${c.number}<br>图待补</div>`;
   return `<div class="card">
     <div class="card-top">
@@ -2149,7 +2149,7 @@ function tileFlags(c) {
 function tileHtml(c, idx) {
   const isJp = !!c.jp;
   const img = c.img
-    ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onerror="this.parentNode.innerHTML='&lt;div class=noimg&gt;图待补&lt;/div&gt;'">`
+    ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onerror="imgErr(this,'noimg')">`
     : `<div class="noimg">${c.set}<br>#${c.number}<br>图待补</div>`;
   const holo = c.holo ? '<span class="tile-holo">✦ Holo</span>'
              : (isJp && c.own && c.own.h ? '<span class="tile-holo">✦ 闪</span>' : '');
@@ -2231,10 +2231,23 @@ function isOwned(c) {
   if (!c.no1ed && !c.promo) return ((c.qty1ed || 0) + (c.qtyUnl || 0)) > 0;
   return (c.qty || 0) > 0;
 }
+// On image error, retry a few times (a just-pushed image may not be live on GitHub Pages yet;
+// a freshly deployed file can take up to ~1 min). Only show 图待补 after retries are exhausted.
+function imgErr(el, cls) {
+  const n = +(el.dataset.retry || 0);
+  const delays = [3000, 10000, 25000];
+  if (n < delays.length) {
+    el.dataset.retry = n + 1;
+    const base = el.src.split('?')[0];
+    setTimeout(function () { el.src = base + '?r=' + Date.now(); }, delays[n]);
+  } else {
+    el.parentNode.innerHTML = '<div class="' + (cls || 'noimg') + '">图待补</div>';
+  }
+}
 function dexTile(c, idx) {
   const owned = isOwned(c);
   const img = c.img
-    ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onerror="this.parentNode.innerHTML='&lt;div class=noimg&gt;图待补&lt;/div&gt;'">`
+    ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onerror="imgErr(this,'noimg')">`
     : `<div class="noimg">${c.set}<br>#${c.number}</div>`;
   return `<div class="dex-card ${owned ? 'owned' : 'missing'}" onclick="openDetail(${idx})">
     <div class="dex-imgwrap">${img}${owned ? '' : '<span class="dex-miss">缺</span>'}</div>
@@ -2403,7 +2416,7 @@ function groupDetailHtml(rep, members) {
     const oi = ownInfo(c);
     const owned = oi.total > 0;
     const img = c.img
-      ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onclick="showLightbox(this.src)" onerror="this.parentNode.innerHTML='<div class=gnoimg>图待补</div>'">`
+      ? `<img src="${c.img}" alt="${c.name}" loading="lazy" onclick="showLightbox(this.src)" onerror="imgErr(this,'gnoimg')">`
       : `<div class="gnoimg">图待补</div>`;
     let fin = '';
     if (c.holo) fin = '<span class="gfin h">✦ 闪</span>';
