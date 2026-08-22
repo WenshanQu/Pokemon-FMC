@@ -171,7 +171,9 @@ one dex group. Ids are arbitrary short strings (`z18`, `m117`, `pAR28`, `m203ir`
 `git`/`grep`/`curl`. UTF-8 without BOM. **Line endings vary:** local Windows edits leave it CRLF, but
 the weekly price bot runs on Linux CI and rewrites `index.html` as **LF**, so after any bot commit /
 merge the file is LF. **Detect before building multi-line anchors:** `grep -c $'\r' index.html`
-(or check `$c.Contains("`r`n")`) → set `$nl = "`r`n"` (CRLF) or `$nl = "`n"` (LF) accordingly. A
+— **but `$c.Contains("`r`n")` is NOT a safe test**: `index.html` currently holds one stray
+CR, so `Contains` reports CRLF on an otherwise pure-LF file and every multi-line anchor silently misses.
+**Count and take the majority** (see the skeleton). A
 multi-line `.Replace` with the wrong newline silently "not found"-aborts.
 
 **Rules**
@@ -200,7 +202,8 @@ multi-line `.Replace` with the wrong newline silently "not found"-aborts.
 ```powershell
 $f='c:\Users\wensh\OneDrive\Desktop\Pokemon FMC\index.html'
 $c=[IO.File]::ReadAllText($f); $before=([regex]::Matches($c,'name: "')).Count; $fail=@()
-$nl = $(if($c.Contains("`r`n")){"`r`n"}else{"`n"})   # match the file's actual line endings
+$crlf=([regex]::Matches($c,"`r`n")).Count; $lfonly=([regex]::Matches($c,"(?<!`r)`n")).Count
+$nl = $(if($crlf -gt $lfonly){"`r`n"}else{"`n"})   # majority wins — one stray CR must not decide this
 function Rep($old,$new){ if(-not $script:c.Contains($old)){$script:fail+=$old.Substring(0,60);return}; $script:c=$script:c.Replace($old,$new) }
 # ... Rep 'anchor old' 'anchor new'  (one per change) ...
 # ... inserts before ']' ...
